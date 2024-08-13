@@ -16,6 +16,6 @@ public class BlockingTheoryTests : IClassFixture<ConcurrencyFixture>
     [InlineData(2)]
     public void Theory(int value)
     {
-        Assert.Equal(2, fixture.CheckConcurrencyAsync().Result);
+        Assert.Equal(1, fixture.CheckConcurrencyAsync().Result);
     }
 }

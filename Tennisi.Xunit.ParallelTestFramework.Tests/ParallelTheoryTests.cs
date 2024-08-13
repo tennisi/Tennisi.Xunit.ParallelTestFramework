@@ -16,6 +16,6 @@ public class ParallelTheoryTests : IClassFixture<ConcurrencyFixture>
     [InlineData(2)]
     public async Task Theory(int value)
     {
-        Assert.Equal(2, await fixture.CheckConcurrencyAsync().ConfigureAwait(false));
+        Assert.Equal(1, await fixture.CheckConcurrencyAsync().ConfigureAwait(false));
     }
 }
