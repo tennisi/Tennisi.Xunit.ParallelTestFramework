@@ -1,9 +1,9 @@
 ﻿namespace Tennisi.Xunit;
 
 /// <summary>
-/// Форсирует Xunit parallelizeTestCollections & preEnumerateTheories параметры в положение 'вкыл'
+/// Форсирует параметры xUnit <c>parallelizeTestCollections</c> и <c>preEnumerateTheories</c> в положение 'включен'.
 /// </summary>
-[AttributeUsage(AttributeTargets.Assembly, Inherited = false)]
+[AttributeUsage(AttributeTargets.Assembly)]
 public sealed class FullTestParallelizationAttribute : Attribute
 {
 }

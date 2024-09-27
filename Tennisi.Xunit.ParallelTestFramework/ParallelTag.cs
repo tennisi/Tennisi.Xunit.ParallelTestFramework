@@ -1,11 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography;
 using System.Text;
 using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public readonly struct ParallelTag : IEquatable<ParallelTag>
+/// <summary>
+/// A structure that serves as a fixture to provide unique but constant value for test fact or theory version,
+/// facilitating parallel execution of tests while ensuring consistency in tagging.
+/// </summary>
+public readonly partial struct ParallelTag : IEquatable<ParallelTag>
 {
     private readonly int _index = -1;
 
@@ -39,7 +42,13 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
         _index = indexInConstrcutor;
     }
 
-    internal static ParallelTag FromValue(string value)
+    /// <summary>
+    /// Creates a new instance of the <see cref="ParallelTag"/> readonly struct from the specified key value.
+    /// </summary>
+    /// <param name="value">The key value used to initialize the <see cref="ParallelTag"/>. 
+    /// This value should be sufficiently long and distinctive, as it is intended to derive other values.</param>
+    /// <returns>A new instance of the <see cref="ParallelTag"/> readonly struct.</returns>
+    public static ParallelTag FromValue(string value)
     {
         var tag = new ParallelTag(value, 0);
         return tag;
@@ -50,6 +59,12 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
         return Value;
     }
 
+    /// <summary>
+    /// Converts the unique tag to an integer representation.
+    /// </summary>
+    /// <returns>
+    /// The integer value corresponding to the unique tag. 
+    /// </returns>
     public int AsInteger()
     {
         var hashCode = 0;
@@ -66,6 +81,12 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
         return Math.Abs(hashCode);
     }
 
+    /// <summary>
+    /// Converts the unique tag to a long representation.
+    /// </summary>
+    /// <returns>
+    /// The long value corresponding to the unique tag. 
+    /// </returns>
     public long AsLong()
     {
         long hashCode = 0;
@@ -80,6 +101,12 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
         return Math.Abs(hashCode);
     }
     
+    /// <summary>
+    /// Converts the unique tag to a GUID representation.
+    /// </summary>
+    /// <returns>
+    /// The GUID value corresponding to the unique tag. 
+    /// </returns>
     public Guid AsGuid()
     {
         var hashBytes = new byte[16];
@@ -99,6 +126,12 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
         return new Guid(hashBytes);
     }
 
+    /// <summary>
+    /// Derives the next unique value based on the current unique tag.
+    /// </summary>
+    /// <returns>
+    /// A new <see cref="ParallelTag"/> instance with a derived unique tag.
+    /// </returns>
     public ParallelTag Next(int index = 1)
     {
         return FromValue(NextDerive(Value, index));
