@@ -8,9 +8,14 @@ namespace Tennisi.Xunit;
 /// A structure that serves as a fixture to provide unique but constant value for test fact or theory version,
 /// facilitating parallel execution of tests while ensuring consistency in tagging.
 /// </summary>
-public readonly partial struct ParallelTag : IEquatable<ParallelTag>
+public readonly struct ParallelTag : IEquatable<ParallelTag>
 {
     private readonly int _index = -1;
+    
+    internal const int MinTcpPort = 49152;
+    internal const int MaxTcpPort = 65535;
+    private static int _port = MinTcpPort-1;
+    private static object _portLock = new();
 
     internal static ParallelTag? FromTestCase(object[]? constructorArguments, IXunitTestCase testCase, object[] args)
     {
@@ -79,6 +84,27 @@ public readonly partial struct ParallelTag : IEquatable<ParallelTag>
 
         hashCode %= int.MaxValue;
         return Math.Abs(hashCode);
+    }
+
+    /// <summary>
+    /// Captures the serial unique port number within the predefined range (49152 - 65535).
+    /// </summary>
+    /// <returns>
+    /// A port number corresponding to the unique tag, constrained to the predefined range defined by the constants:
+    /// <list type="number">
+    /// <item><description>MinTestPort = 49152</description></item>
+    /// <item><description>MaxTestPort = 65535</description></item>
+    /// </list>
+    /// </returns>
+    public int CaptureTcpPort()
+    {
+        lock (_portLock)
+        {
+            _port++;
+            if (_port > MaxTcpPort)
+                throw new InvalidOperationException($"Maximum number of ports are captured: {MaxTcpPort}");
+            return _port;
+        }
     }
 
     /// <summary>
