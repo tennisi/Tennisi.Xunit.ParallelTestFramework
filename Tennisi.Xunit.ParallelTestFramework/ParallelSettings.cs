@@ -24,6 +24,7 @@ internal static class ParallelSettings
         RefineParallelSetting(assemblyName.FullName, opts, setting, value);
     }
     
+    
     internal static void RefineParallelSetting(string assemblyName, ITestFrameworkOptions opts, string setting, bool value)
     {
         if (ShouldForceParallelize(assemblyName, opts).Force)
