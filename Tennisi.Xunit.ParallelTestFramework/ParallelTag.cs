@@ -1,203 +1,110 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Xunit.Sdk;
 
-namespace Tennisi.Xunit;
-
-/// <summary>
-/// A structure that serves as a fixture to provide unique but constant value for test fact or theory version,
-/// facilitating parallel execution of tests while ensuring consistency in tagging.
-/// </summary>
-public readonly struct ParallelTag : IEquatable<ParallelTag>
+namespace Tennisi.Xunit
 {
-    private readonly int _index = -1;
-    
-    internal const int MinTcpPort = 49152;
-    internal const int MaxTcpPort = 65535;
-    private static int _port = MinTcpPort-1;
-    private static readonly object PortLock = new();
-
-    internal static ParallelTag? FromTestCase(object[]? constructorArguments, IXunitTestCase testCase, object[] args)
+    public readonly struct ParallelTag : IEquatable<ParallelTag>
     {
-        if (constructorArguments == null)
-            return null;
-        for (var i = 0; i <= constructorArguments.Length - 1; i++)
+        private readonly string _value;
+        private readonly int _next;
+        private readonly int _indexInConstructor;
+
+        internal static ParallelTag? FromTestCase(object[]? constructorArguments, IXunitTestCase testCase)
         {
-            var p = constructorArguments[i];
-            if (p is not ParallelTag) continue;
-            var result = new ParallelTag(testCase.UniqueID, i);
-            return result;
-        }
+            if (constructorArguments == null)
+                return null;
 
-        return null;
-    }
-
-    internal static void Inject(ref ParallelTag? tag, ref object[] args)
-    {
-        if (tag == null)
-            throw new InvalidOperationException(nameof(ParallelTag));
-        args[tag.Value._index] = tag;
-    }
-
-    private string Value { get; } = "";
-
-    private ParallelTag(string value, int indexInConstrcutor)
-    {
-        Value = value;
-        _index = indexInConstrcutor;
-    }
-
-    /// <summary>
-    /// Creates a new instance of the <see cref="ParallelTag"/> readonly struct from the specified key value.
-    /// </summary>
-    /// <param name="value">The key value used to initialize the <see cref="ParallelTag"/>. 
-    /// This value should be sufficiently long and distinctive, as it is intended to derive other values.</param>
-    /// <returns>A new instance of the <see cref="ParallelTag"/> readonly struct.</returns>
-    public static ParallelTag FromValue(string value)
-    {
-        var tag = new ParallelTag(value, 0);
-        return tag;
-    }
-
-    public override string ToString()
-    {
-        return Value;
-    }
-
-    /// <summary>
-    /// Converts the unique tag to an integer representation.
-    /// </summary>
-    /// <returns>
-    /// The integer value corresponding to the unique tag. 
-    /// </returns>
-    public int AsInteger()
-    {
-        var hashCode = 0;
-        var length = Value.Length;
-
-        for (var i = 0; i < length; i += 8)
-        {
-            var chunk = Value.Substring(i, Math.Min(8, length - i));
-            var chunkValue = Convert.ToInt32(chunk, 16);
-            hashCode ^= chunkValue;
-        }
-
-        hashCode %= int.MaxValue;
-        return Math.Abs(hashCode);
-    }
-
-    /// <summary>
-    /// Reserves a unique TCP port number within the predefined range (49152 - 65535).
-    /// </summary>
-    /// <returns>
-    /// A unique port number that corresponds to the reserved tag, constrained to the predefined range defined by the constants:
-    /// <list type="number">
-    /// <item><description>MinTestPort = 49152</description></item>
-    /// <item><description>MaxTestPort = 65535</description></item>
-    /// </list>
-    /// </returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when the maximum number of ports has been reserved, exceeding <see cref="MaxTcpPort"/>.
-    /// </exception>
-    public int ReserveTcpPort()
-    {
-        lock (PortLock)
-        {
-            _port++;
-            if (_port > MaxTcpPort)
-                throw new InvalidOperationException($"Maximum number of ports are captured: {MaxTcpPort}");
-            return _port;
-        }
-    }
-
-    /// <summary>
-    /// Converts the unique tag to a long representation.
-    /// </summary>
-    /// <returns>
-    /// The long value corresponding to the unique tag. 
-    /// </returns>
-    public long AsLong()
-    {
-        long hashCode = 0;
-        var length = Value.Length;
-        for (var i = 0; i < length; i += 16)
-        {
-            var chunk = Value.Substring(i, Math.Min(16, length - i));
-            var chunkValue = Convert.ToInt64(chunk, 16);
-            hashCode ^= chunkValue;
-        }
-        hashCode = hashCode % long.MaxValue;
-        return Math.Abs(hashCode);
-    }
-    
-    /// <summary>
-    /// Converts the unique tag to a GUID representation.
-    /// </summary>
-    /// <returns>
-    /// The GUID value corresponding to the unique tag. 
-    /// </returns>
-    public Guid AsGuid()
-    {
-        var hashBytes = new byte[16];
-        var length = Value.Length;
-        var bytePos = 0;
-    
-        for (var i = 0; i < length; i += 8)
-        {
-            var chunk = Value.Substring(i, Math.Min(8, length - i));
-            var chunkValue = Convert.ToInt32(chunk, 16);
-            var chunkBytes = BitConverter.GetBytes(chunkValue);
-            for (var j = 0; j < chunkBytes.Length && bytePos < hashBytes.Length; j++, bytePos++)
+            for (var i = 0; i < constructorArguments.Length; i++)
             {
-                hashBytes[bytePos] ^= chunkBytes[j];
+                if (constructorArguments[i] is ParallelTag)
+                {
+                    var result = new ParallelTag(testCase.UniqueID, i, 0);
+                    return result;
+                }
             }
+
+            return null;
         }
-        return new Guid(hashBytes);
-    }
 
-    /// <summary>
-    /// Derives the next unique value based on the current unique tag.
-    /// </summary>
-    /// <returns>
-    /// A new <see cref="ParallelTag"/> instance with a derived unique tag.
-    /// </returns>
-    public ParallelTag Next(int index = 1)
-    {
-        return FromValue(NextDerive(Value, index));
-    }
-    
-    [SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
-    private static string NextDerive(string baseAddress, int index)
-    {
-        var indexPos = baseAddress.LastIndexOf(':');
-        var basePart = indexPos >= 0 ? baseAddress.Substring(0, indexPos) : baseAddress;
-        var newAddress = $"{basePart}:{index}";
-        var inputBytes = Encoding.UTF8.GetBytes(newAddress);
-        return Convert.ToHexString(inputBytes).ToLowerInvariant();
-    }
-    
-    public bool Equals(ParallelTag other)
-    {
-        return Value == other.Value;
-    }
+        internal static void Inject(ref ParallelTag? tag, ref object[] args)
+        {
+            if (tag == null)
+                throw new InvalidOperationException(nameof(ParallelTag));
 
-    public override bool Equals(object obj)
-    {
-        return obj is ParallelTag other && Equals(other);
-    }
+            args[tag.Value._indexInConstructor] = tag;
+        }
 
-    public override int GetHashCode()
-    {
-        return Value.GetHashCode();
-    }
+        private ParallelTag(string value, int indexInConstructor, int next)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("Value cannot be null or empty", nameof(value));
 
-    public static bool operator ==(ParallelTag left, ParallelTag right)
-    {
-        return left.Equals(right);
-    }
+            _value = value;
+            _indexInConstructor = indexInConstructor;
+            _next = next;
+        }
 
-    public static bool operator !=(ParallelTag left, ParallelTag right)
-    {
-        return !(left == right);
+        public override string ToString() => $"{_value}:{_next}";
+
+        public ParallelTag Next(int increment = 1)
+        {
+            return new ParallelTag(_value,0, _next + increment);
+        }
+
+        public int AsInteger()
+        {
+            return HashCode.Combine(_value, _next);
+        }
+
+        public long AsLong()
+        {
+            long valueHash = 0;
+            foreach (char c in _value)
+            {
+                valueHash = (valueHash * 31) + c;
+            }
+            return (valueHash ^ _next) & long.MaxValue;
+        }
+
+        public Guid AsGuid()
+        {
+            var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(ToString()));
+
+            var guidBytes = new byte[16];
+            Array.Copy(hashBytes, guidBytes, 16);
+
+            return new Guid(guidBytes);
+        }
+
+        public bool Equals(ParallelTag other)
+        {
+            return _value == other._value && _next == other._next;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ParallelTag other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_value, _next);
+        }
+
+        public static bool operator ==(ParallelTag left, ParallelTag right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ParallelTag left, ParallelTag right)
+        {
+            return !(left == right);
+        }
+
+        public static ParallelTag FromValue(string value, int next =0)
+        {
+            return new ParallelTag(value, 0, next);
+        }
     }
 }
