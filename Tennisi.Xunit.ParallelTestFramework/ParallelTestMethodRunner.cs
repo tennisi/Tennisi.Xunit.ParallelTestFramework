@@ -50,7 +50,7 @@ public sealed class ParallelTestMethodRunner : XunitTestMethodRunner
         {
             foreach (var xunitTestCase in TestCases)
             {
-                var testCase = (XunitTestCase)xunitTestCase;
+                var testCase = (IXunitTestCase)xunitTestCase;
                 summary.Aggregate(await RunTestCaseAsync2(testCase, disableParallelization));
                 if (CancellationTokenSource.IsCancellationRequested)
                     break;
