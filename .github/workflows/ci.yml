@@ -14,7 +14,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,8 +26,7 @@ jobs:
           dotnet-version: '7.x'
 
       - name: Initialize .NET tool manifest
-        run: |
-          dotnet new tool-manifest || true
+        run: dotnet new tool-manifest || true
 
       - name: Install minver-cli locally
         run: dotnet tool install minver-cli --version 5.0.0
@@ -43,24 +43,27 @@ jobs:
       - name: Get MinVer version
         id: get_version
         run: |
-          MINVER_VERSION=$(dotnet minver)
-          echo "MINVER_VERSION=${MINVER_VERSION}" >> $GITHUB_ENV
+          $MINVER_VERSION = dotnet minver
+          echo "MINVER_VERSION=$MINVER_VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        shell: pwsh
 
       - name: Get latest tag
         id: get_tag
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          echo "TAG=${TAG}" >> $GITHUB_ENV
+          git describe --tags --abbrev=0 2>$null || echo ""
+        shell: bash
+        env:
+          TAG: $(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
       - name: Determine version
         id: determine_version
         run: |
-          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
-            VERSION=${{ env.TAG }}
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "VERSION=${{ env.TAG }}" >> $GITHUB_ENV
           else
-            VERSION=${{ env.MINVER_VERSION }}
+            echo "VERSION=${{ env.MINVER_VERSION }}" >> $GITHUB_ENV
           fi
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        shell: bash
 
       - name: Pack and Push
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
