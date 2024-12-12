@@ -14,10 +14,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Ensure all tags and history are fetched
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -25,8 +28,7 @@ jobs:
           dotnet-version: '7.x'
 
       - name: Initialize .NET tool manifest
-        run: |
-          dotnet new tool-manifest || true
+        run: dotnet new tool-manifest || true
 
       - name: Install minver-cli locally
         run: dotnet tool install minver-cli --version 5.0.0
@@ -43,27 +45,38 @@ jobs:
       - name: Get MinVer version
         id: get_version
         run: |
-          MINVER_VERSION=$(dotnet minver)
-          echo "MINVER_VERSION=${MINVER_VERSION}" >> $GITHUB_ENV
+          $MINVER_VERSION = dotnet minver
+          echo "MINVER_VERSION=$MINVER_VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        shell: pwsh
 
       - name: Get latest tag
         id: get_tag
         run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          echo "TAG=${TAG}" >> $GITHUB_ENV
+          try {
+            $TAG = git describe --tags --abbrev=0 2>$null
+            if (-not $TAG) { $TAG = "" }
+            Write-Output "Found tag: $TAG"
+          } catch {
+            $TAG = ""
+            Write-Output "No tags found, setting TAG to an empty string."
+          }
+          echo "TAG=$TAG" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        shell: pwsh
 
       - name: Determine version
         id: determine_version
         run: |
-          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
-            VERSION=${{ env.TAG }}
-          else
-            VERSION=${{ env.MINVER_VERSION }}
-          fi
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          if ($Env:GITHUB_REF -eq "refs/heads/main") {
+            $VERSION = $Env:TAG
+          } else {
+            $VERSION = $Env:MINVER_VERSION
+          }
+          echo "VERSION=$VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        shell: pwsh
 
       - name: Pack and Push
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         run: |
           dotnet pack -c Release /p:Version=${{ env.VERSION }}
           dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+        shell: pwsh
