@@ -7,7 +7,7 @@ namespace Tennisi.Xunit;
 [SuppressMessage("ReSharper", "UnusedType.Global", Justification = "General design")]
 internal sealed class RetryFactDiscoverer : IXunitTestCaseDiscoverer
 {
-    readonly IMessageSink _diagnosticMessageSink;
+    private readonly IMessageSink _diagnosticMessageSink;
 
     public RetryFactDiscoverer(IMessageSink diagnosticMessageSink)
     {
