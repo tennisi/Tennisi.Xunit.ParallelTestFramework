@@ -4,10 +4,10 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public sealed class ParallelTestMethodRunner : XunitTestMethodRunner
+internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
 {
     private readonly IMessageSink _diagnosticMessageSink;
-    private readonly object[] _constructorArguments;
+    private readonly object?[] _constructorArguments;
 
     private static readonly TimeSpan TimeLimit = TimeSpan.FromSeconds(120);
 
@@ -19,7 +19,7 @@ public sealed class ParallelTestMethodRunner : XunitTestMethodRunner
         IMessageBus messageBus,
         ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource,
-        object[] constructorArguments)
+        object?[] constructorArguments)
         : base(testMethod, @class, method, testCases, diagnosticMessageSink, messageBus, aggregator,
             cancellationTokenSource, constructorArguments)
     {
@@ -84,7 +84,7 @@ public sealed class ParallelTestMethodRunner : XunitTestMethodRunner
                          .ConfigureAwait(false);
     }
     
-    private async Task<RunSummary> RunDiagnosticTestCaseAsync(IXunitTestCase testCase, object[] args)
+    private async Task<RunSummary> RunDiagnosticTestCaseAsync(IXunitTestCase testCase, object?[] args)
     {
         var parameters = testCase.TestMethodArguments != null
             ? string.Join(", ", testCase.TestMethodArguments.Select(a => a?.ToString() ?? "null"))

@@ -19,9 +19,12 @@ namespace Tennisi.Xunit;
 /// }
 /// </code>
 /// </example>
-[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryFactDiscoverer", "Tennisi.Xunit.ParallelTestFramework")]
+[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryFactDiscoverer", "Tennisi.Xunit")]
 public sealed class RetryFactAttribute : FactAttribute
 {
+    /// <summary>
+    /// Gets the number of retry attempts for the test.
+    /// </summary>
     public int RetryCount { get; internal set; }
 
     /// <summary>

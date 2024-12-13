@@ -4,7 +4,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 [Serializable]
-internal class RetryTestCase : IXunitTestCase
+internal sealed class RetryTestCase : IXunitTestCase
 {
     private int _retryCount;
     private IXunitTestCase _realCase;
@@ -18,7 +18,7 @@ internal class RetryTestCase : IXunitTestCase
     public RetryTestCase(IMessageSink diagnosticMessageSink,
         TestMethodDisplay defaultMethodDisplay,
         TestMethodDisplayOptions defaultMethodDisplayOptions,
-        ITestMethod testMethod, object[] testMethodArguments, int retryCount)
+        ITestMethod testMethod, object[]? testMethodArguments, int retryCount)
     {
         _realCase = new XunitTestCase(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod, testMethodArguments);
         _retryCount = retryCount;

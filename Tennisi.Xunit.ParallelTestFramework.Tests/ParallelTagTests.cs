@@ -1,5 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
@@ -14,6 +16,7 @@ public class ParallelTagTests
     private static int _counter;
     private readonly ITestOutputHelper _testOutput;
     
+    [SuppressMessage("Usage", "xUnit1041:General design", Justification = "General design")]
     public ParallelTagTests(ITestOutputHelper testOutputHelper, ParallelTag parallelTag)
     {
         _tag = parallelTag;
@@ -28,7 +31,10 @@ public class ParallelTagTests
     [InlineData("p2")]
     public async Task Task1(string p)
     {
-        await Test(GetTestMethodName());
+        if (p.ToString(CultureInfo.InvariantCulture) == p.ToLower(CultureInfo.InvariantCulture))
+        {
+            await Test(GetTestMethodName());
+        }
     }
     
     [Fact]

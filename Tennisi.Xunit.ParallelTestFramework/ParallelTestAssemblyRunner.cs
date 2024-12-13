@@ -3,7 +3,7 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public sealed class ParallelTestAssemblyRunner : XunitTestAssemblyRunner
+internal sealed class ParallelTestAssemblyRunner : XunitTestAssemblyRunner
 {
     public ParallelTestAssemblyRunner(ITestAssembly testAssembly,
         IEnumerable<IXunitTestCase> testCases,

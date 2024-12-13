@@ -1,15 +1,17 @@
-﻿using Xunit.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public class RetryFactDiscoverer : IXunitTestCaseDiscoverer
+[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "General design")]
+internal sealed class RetryFactDiscoverer : IXunitTestCaseDiscoverer
 {
     readonly IMessageSink _diagnosticMessageSink;
 
     public RetryFactDiscoverer(IMessageSink diagnosticMessageSink)
     {
-        this._diagnosticMessageSink = diagnosticMessageSink;
+        _diagnosticMessageSink = diagnosticMessageSink;
     }
 
     public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo factAttribute)

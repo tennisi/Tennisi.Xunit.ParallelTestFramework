@@ -24,6 +24,9 @@ namespace Tennisi.Xunit;
 [XunitTestCaseDiscoverer("Tennisi.Xunit.RetryTheoryDiscoverer", "Tennisi.Xunit.ParallelTestFramework")]
 public sealed class RetryTheoryAttribute : TheoryAttribute
 {
+    /// <summary>
+    /// Gets the number of retry attempts for the test.
+    /// </summary>
     public int RetryCount { get; internal set; }
 
     /// <summary>
