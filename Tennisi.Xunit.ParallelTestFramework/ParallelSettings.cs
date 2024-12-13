@@ -6,7 +6,7 @@ namespace Tennisi.Xunit;
 
 internal static class ParallelSettings
 {
-    private class TestAsm
+    private sealed class TestAsm
     {
         public TestAsm(bool force, ITestFrameworkOptions opts)
         {

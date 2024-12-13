@@ -5,7 +5,7 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public sealed class ParallelTestClassRunner : XunitTestClassRunner
+internal sealed class ParallelTestClassRunner : XunitTestClassRunner
 {
     public ParallelTestClassRunner(ITestClass testClass,
         IReflectionTypeInfo @class,
@@ -23,7 +23,7 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
     protected override Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod,
         IReflectionMethodInfo method,
         IEnumerable<IXunitTestCase> testCases,
-        object[] constructorArguments)
+        object?[] constructorArguments)
     {
         var inst = new ParallelTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink,
             MessageBus,
@@ -71,7 +71,7 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
         return summary;
     }
 
-    protected override object[] CreateTestClassConstructorArguments()
+    protected override object?[] CreateTestClassConstructorArguments()
     {
         var isStaticClass = Class.Type.GetTypeInfo().IsAbstract && Class.Type.GetTypeInfo().IsSealed;
         if (!isStaticClass)
@@ -82,11 +82,11 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
                 var unusedArguments = new List<Tuple<int, ParameterInfo>>();
                 var parameters = ctor.GetParameters();
 
-                object[] constructorArguments = new object[parameters.Length];
+                object?[] constructorArguments = new object?[parameters.Length];
                 for (var idx = 0; idx < parameters.Length; ++idx)
                 {
                     var parameter = parameters[idx];
-                    object argumentValue;
+                    object? argumentValue;
 
                     if (parameter.ParameterType == typeof(ParallelTag))
                     {
@@ -110,10 +110,10 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
                 return constructorArguments;
             }
         }
-        return new object[0];
+        return Array.Empty<object>();
     }
 
-    private static object GetDefaultValue(TypeInfo typeInfo)
+    private static object? GetDefaultValue(TypeInfo typeInfo)
     {
         if (typeInfo.IsValueType)
             return Activator.CreateInstance(typeInfo.AsType());

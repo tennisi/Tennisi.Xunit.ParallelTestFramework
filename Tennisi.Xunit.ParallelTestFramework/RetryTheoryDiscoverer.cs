@@ -1,15 +1,17 @@
-﻿using Xunit.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal class RetryTheoryDiscoverer : TheoryDiscoverer
+[SuppressMessage("ReSharper", "UnusedType.Global", Justification = "General design")]
+internal sealed class RetryTheoryDiscoverer : TheoryDiscoverer
 {
     public RetryTheoryDiscoverer(IMessageSink diagnosticMessageSink)
         : base(diagnosticMessageSink)
     { }
 
-    protected override IEnumerable<IXunitTestCase> CreateTestCasesForDataRow(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute, object[] dataRow)
+    protected override IEnumerable<IXunitTestCase> CreateTestCasesForDataRow(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute, object[]? dataRow)
     {
         yield return 
             new RetryTestCase(DiagnosticMessageSink,

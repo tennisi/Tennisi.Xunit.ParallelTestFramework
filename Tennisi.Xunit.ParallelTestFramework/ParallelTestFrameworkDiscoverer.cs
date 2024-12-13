@@ -5,11 +5,11 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
+internal sealed class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
 {
     private readonly IAssemblyInfo _assemblyInfo;
 
-    public ParallelTestFrameworkDiscoverer(IAssemblyInfo assemblyInfo, ISourceInformationProvider sourceProvider, IMessageSink diagnosticMessageSink, IXunitTestCollectionFactory collectionFactory = null) : base(assemblyInfo, sourceProvider, diagnosticMessageSink, collectionFactory)
+    public ParallelTestFrameworkDiscoverer(IAssemblyInfo assemblyInfo, ISourceInformationProvider sourceProvider, IMessageSink diagnosticMessageSink, IXunitTestCollectionFactory? collectionFactory = null) : base(assemblyInfo, sourceProvider, diagnosticMessageSink, collectionFactory)
     {
         _assemblyInfo = assemblyInfo;
     }
@@ -27,7 +27,7 @@ public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
         return FindTestsForMethod2(testMethod, includeSourceInformation, messageBus, discoveryOptions, retryCount);
     }
     
-    protected virtual bool FindTestsForMethod2(ITestMethod testMethod, bool includeSourceInformation,
+    private bool FindTestsForMethod2(ITestMethod testMethod, bool includeSourceInformation,
         IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions, int retryCount)
     {
