@@ -3,7 +3,7 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal class DelayedMessageBus : IMessageBus
+internal sealed class DelayedMessageBus : IMessageBus
 {
     private readonly IMessageBus _innerBus;
     private readonly List<IMessageSinkMessage> _messages = new();

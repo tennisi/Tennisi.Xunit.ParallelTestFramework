@@ -5,11 +5,11 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
+internal sealed class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
 {
     private readonly IAssemblyInfo _assemblyInfo;
 
-    public ParallelTestFrameworkDiscoverer(IAssemblyInfo assemblyInfo, ISourceInformationProvider sourceProvider, IMessageSink diagnosticMessageSink, IXunitTestCollectionFactory collectionFactory = null) : base(assemblyInfo, sourceProvider, diagnosticMessageSink, collectionFactory)
+    public ParallelTestFrameworkDiscoverer(IAssemblyInfo assemblyInfo, ISourceInformationProvider sourceProvider, IMessageSink diagnosticMessageSink, IXunitTestCollectionFactory? collectionFactory = null) : base(assemblyInfo, sourceProvider, diagnosticMessageSink, collectionFactory)
     {
         _assemblyInfo = assemblyInfo;
     }
@@ -18,8 +18,7 @@ public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
         IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions)
     {
-        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions,
-            "xunit.discovery.PreEnumerateTheories", true);
+        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
         
         if (!testMethod.ShouldUseClassRetry(out var retryCount))
             return base.FindTestsForMethod(testMethod, includeSourceInformation, messageBus, discoveryOptions);
@@ -27,7 +26,7 @@ public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
         return FindTestsForMethod2(testMethod, includeSourceInformation, messageBus, discoveryOptions, retryCount);
     }
     
-    protected virtual bool FindTestsForMethod2(ITestMethod testMethod, bool includeSourceInformation,
+    private bool FindTestsForMethod2(ITestMethod testMethod, bool includeSourceInformation,
         IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions, int retryCount)
     {
@@ -84,7 +83,7 @@ public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
     protected override bool FindTestsForType(ITestClass testClass, bool includeSourceInformation, IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions)
     {
-        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions, "xunit.discovery.PreEnumerateTheories", true);
+        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
         return base.FindTestsForType(testClass, includeSourceInformation, messageBus, discoveryOptions);
     }
 }

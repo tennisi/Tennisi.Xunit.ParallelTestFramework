@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Reflection;
+using Xunit;
 
 namespace Tennisi.Xunit.ParallelTestFramework.Tests;
 
@@ -19,7 +20,17 @@ public class AssemblyInfoExtractorTests
     [InlineData("Тенниси, Юнит, ТестФреймворк, тесты, Version=3.0.0.0-beta1, Culture=ru-RU", "Тенниси, Юнит, ТестФреймворк, тесты, Version=3.0.0.0-beta1")]
     public void ExtractNameAndVersion_VariousAssemblyNames_ReturnsExpected(string input, string expected)
     {
-        var result = AssemblyInfoExtractor.ExtractNameAndVersion(input);
+        // Use reflection to find the AssemblyInfoExtractor class
+        var assembly = typeof(ParallelTag).Assembly;
+        var type = assembly.GetType("Tennisi.Xunit.AssemblyInfoExtractor");
+        Assert.NotNull(type); // Ensure the type exists
+
+        // Get the ExtractNameAndVersion method
+        var method = type.GetMethod("ExtractNameAndVersion", BindingFlags.Public | BindingFlags.Static);
+        Assert.NotNull(method); // Ensure the method exists
+
+        // Invoke the method using reflection
+        var result = method.Invoke(null, new object[] { input });
         Assert.Equal(expected, result);
     }
 }

@@ -5,10 +5,10 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public class ParallelTestFramework : XunitTestFramework
+internal sealed class ParallelTestFramework : XunitTestFramework
 {
     [SuppressMessage("ReSharper", "ConditionalAccessQualifierIsNonNullableAccordingToAPIContract", Justification = "By Author")]
-    protected ParallelTestFramework(IMessageSink messageSink)
+    public ParallelTestFramework(IMessageSink messageSink)
         : base(messageSink)
     {
         #if DEBUG

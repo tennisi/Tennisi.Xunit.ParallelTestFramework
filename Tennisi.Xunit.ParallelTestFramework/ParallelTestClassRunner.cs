@@ -5,8 +5,9 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public sealed class ParallelTestClassRunner : XunitTestClassRunner
+internal sealed class ParallelTestClassRunner : XunitTestClassRunner
 {
+    private readonly bool _disableTestParallelizationOnAssembly;
     public ParallelTestClassRunner(ITestClass testClass,
         IReflectionTypeInfo @class,
         IEnumerable<IXunitTestCase> testCases,
@@ -18,12 +19,14 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
         IDictionary<Type, object> collectionFixtureMappings)
         : base(testClass, @class, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator, cancellationTokenSource, collectionFixtureMappings)
     {
+        _disableTestParallelizationOnAssembly = 
+            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
     }
 
     protected override Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod,
         IReflectionMethodInfo method,
         IEnumerable<IXunitTestCase> testCases,
-        object[] constructorArguments)
+        object?[] constructorArguments)
     {
         var inst = new ParallelTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink,
             MessageBus,
@@ -40,7 +43,7 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
         var disableParallelizationOnCustomCollection = TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
                                                        && !TestClass.Class.GetCustomAttributes(typeof(EnableParallelizationAttribute)).Any();
 
-        var disableParallelization = disableParallelizationAttribute || disableParallelizationOnCustomCollection;
+        var disableParallelization = _disableTestParallelizationOnAssembly || disableParallelizationAttribute || disableParallelizationOnCustomCollection;
 
         if (disableParallelization)
             return await base.RunTestMethodsAsync().ConfigureAwait(false);
@@ -71,7 +74,7 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
         return summary;
     }
 
-    protected override object[] CreateTestClassConstructorArguments()
+    protected override object?[] CreateTestClassConstructorArguments()
     {
         var isStaticClass = Class.Type.GetTypeInfo().IsAbstract && Class.Type.GetTypeInfo().IsSealed;
         if (!isStaticClass)
@@ -82,11 +85,11 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
                 var unusedArguments = new List<Tuple<int, ParameterInfo>>();
                 var parameters = ctor.GetParameters();
 
-                object[] constructorArguments = new object[parameters.Length];
+                object?[] constructorArguments = new object?[parameters.Length];
                 for (var idx = 0; idx < parameters.Length; ++idx)
                 {
                     var parameter = parameters[idx];
-                    object argumentValue;
+                    object? argumentValue;
 
                     if (parameter.ParameterType == typeof(ParallelTag))
                     {
@@ -110,10 +113,10 @@ public sealed class ParallelTestClassRunner : XunitTestClassRunner
                 return constructorArguments;
             }
         }
-        return new object[0];
+        return Array.Empty<object>();
     }
 
-    private static object GetDefaultValue(TypeInfo typeInfo)
+    private static object? GetDefaultValue(TypeInfo typeInfo)
     {
         if (typeInfo.IsValueType)
             return Activator.CreateInstance(typeInfo.AsType());

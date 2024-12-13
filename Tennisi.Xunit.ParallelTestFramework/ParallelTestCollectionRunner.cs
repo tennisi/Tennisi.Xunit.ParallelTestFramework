@@ -3,7 +3,7 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-public sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
+internal sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
 {
     public ParallelTestTestCollectionRunner(ITestCollection testCollection,
         IEnumerable<IXunitTestCase> testCases,
