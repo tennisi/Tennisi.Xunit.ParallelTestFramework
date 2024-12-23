@@ -1,16 +1,20 @@
-﻿using Xunit;
+﻿using System.Diagnostics.CodeAnalysis;
+using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
+/// <inheritdoc />
+public class ParallelTestMethodRunner : XunitTestMethodRunner
 {
+    private readonly bool _disableTestParallelizationOnAssembly;
     private readonly IMessageSink _diagnosticMessageSink;
     private readonly object?[] _constructorArguments;
 
     private static readonly TimeSpan TimeLimit = TimeSpan.FromSeconds(120);
 
+    /// <inheritdoc />
     public ParallelTestMethodRunner(ITestMethod testMethod,
         IReflectionTypeInfo @class,
         IReflectionMethodInfo method,
@@ -25,11 +29,16 @@ internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
     {
         _diagnosticMessageSink = diagnosticMessageSink;
         _constructorArguments = constructorArguments;
+        _disableTestParallelizationOnAssembly = 
+            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
+
     }
 
+    /// <inheritdoc />
     protected override async Task<RunSummary?> RunTestCasesAsync()
     {
         var disableParallelization =
+            _disableTestParallelizationOnAssembly ||
             TestMethod.TestClass.Class.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any()
             || TestMethod.TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
             || TestMethod.Method.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any()
@@ -37,7 +46,7 @@ internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
                 a.GetNamedArgument<bool>(nameof(MemberDataAttribute.DisableDiscoveryEnumeration)));
         
         var summary = new RunSummary();
-        if (ParallelSettings.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories") && !disableParallelization)
+        if (!disableParallelization && ParallelSettings.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))
         {
             var caseTasks = TestCases.Select(x => RunTestCaseAsync2(x, disableParallelization));
             var caseSummaries = await Task.WhenAll(caseTasks).ConfigureAwait(false);
@@ -67,6 +76,8 @@ internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
         return await RunTestCaseAsync(testCase);
     }
 
+    /// <inheritdoc />
+    [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Xunit designed")]
     protected override async Task<RunSummary> RunTestCaseAsync(IXunitTestCase testCase)
     {
         var args = _constructorArguments.Select(a => a is TestOutputHelper ? new TestOutputHelper() : a).ToArray();
@@ -101,9 +112,7 @@ internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
                 TimeLimit,
                 Timeout.InfiniteTimeSpan);
 
-            var result = await testCase.RunAsync(_diagnosticMessageSink, MessageBus, args, new ExceptionAggregator(Aggregator),
-                CancellationTokenSource);
-
+            var result = await RunExtendedTestCaseAsync(testCase, args);
 #if DEBUG
             var status = result.Failed > 0 ? "FAILURE" : result.Skipped > 0 ? "SKIPPED" : "SUCCESS";
             _diagnosticMessageSink.OnMessage(new DiagnosticMessage($"{status}: {testDetails} ({result.Time}s)"));
@@ -115,5 +124,18 @@ internal sealed class ParallelTestMethodRunner : XunitTestMethodRunner
             _diagnosticMessageSink.OnMessage(new DiagnosticMessage($"ERROR: {testDetails} ({ex.Message})"));
             throw;
         }
+    }
+
+    /// <summary>
+    /// RunExtendedTestCaseAsync
+    /// </summary>
+    /// <param name="testCase"></param>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    [SuppressMessage("Design", "CA1062:Validate arguments of public methods")]
+    protected virtual async Task<RunSummary> RunExtendedTestCaseAsync(IXunitTestCase testCase, object?[] args)
+    {
+        return await testCase.RunAsync(_diagnosticMessageSink, MessageBus, args, new ExceptionAggregator(Aggregator),
+            CancellationTokenSource);
     }
 }

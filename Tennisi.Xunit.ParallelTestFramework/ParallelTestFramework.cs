@@ -5,10 +5,12 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestFramework : XunitTestFramework
+/// <inheritdoc />
+public class ParallelTestFramework : XunitTestFramework
 {
+    /// <inheritdoc />
     [SuppressMessage("ReSharper", "ConditionalAccessQualifierIsNonNullableAccordingToAPIContract", Justification = "By Author")]
-    public ParallelTestFramework(IMessageSink messageSink)
+    protected ParallelTestFramework(IMessageSink messageSink)
         : base(messageSink)
     {
         #if DEBUG
@@ -16,11 +18,13 @@ internal sealed class ParallelTestFramework : XunitTestFramework
         #endif
     }
 
+    /// <inheritdoc />
     protected override ITestFrameworkExecutor CreateExecutor(AssemblyName assemblyName)
     {
         return new ParallelTestFrameworkExecutor(assemblyName, SourceInformationProvider, DiagnosticMessageSink);
     }
 
+    /// <inheritdoc />
     protected override ITestFrameworkDiscoverer CreateDiscoverer(IAssemblyInfo assemblyInfo)
     {
         return new ParallelTestFrameworkDiscoverer(assemblyInfo, SourceInformationProvider, DiagnosticMessageSink);

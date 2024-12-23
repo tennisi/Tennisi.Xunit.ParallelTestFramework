@@ -3,8 +3,10 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
+/// <inheritdoc />
+public class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
 {
+    /// <inheritdoc />
     public ParallelTestTestCollectionRunner(ITestCollection testCollection,
         IEnumerable<IXunitTestCase> testCases,
         IMessageSink diagnosticMessageSink,
@@ -17,13 +19,28 @@ internal sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunn
     {
     }
 
+    /// <summary>
+    /// Creates ParallelTestClassRunner
+    /// </summary>
+    /// <param name="testClass"></param>
+    /// <param name="classT"></param>
+    /// <param name="testCases"></param>
+    /// <returns></returns>
+    protected virtual ParallelTestClassRunner CreateClassRunner(ITestClass testClass, IReflectionTypeInfo classT,
+        IEnumerable<IXunitTestCase> testCases)
+    {
+        return new ParallelTestClassRunner(testClass, classT, testCases, DiagnosticMessageSink, MessageBus,
+            TestCaseOrderer, new ExceptionAggregator(Aggregator), CancellationTokenSource,
+            CollectionFixtureMappings);
+    }
+
+    /// <inheritdoc />
     protected override Task<RunSummary> RunTestClassAsync(ITestClass testClass, IReflectionTypeInfo @class,
         IEnumerable<IXunitTestCase> testCases)
-        => new ParallelTestClassRunner(testClass, @class, testCases, DiagnosticMessageSink, MessageBus,
-                TestCaseOrderer, new ExceptionAggregator(Aggregator), CancellationTokenSource,
-                CollectionFixtureMappings)
+        => CreateClassRunner(testClass, @class, testCases)
             .RunAsync();
 
+    /// <inheritdoc />
     protected override async Task<RunSummary> RunTestClassesAsync()
     {
         if (TestCollection.CollectionDefinition == null)

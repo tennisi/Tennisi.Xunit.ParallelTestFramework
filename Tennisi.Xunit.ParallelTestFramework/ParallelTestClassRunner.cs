@@ -5,8 +5,12 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestClassRunner : XunitTestClassRunner
+/// <inheritdoc />
+public class ParallelTestClassRunner : XunitTestClassRunner
 {
+    private readonly bool _disableTestParallelizationOnAssembly;
+
+    /// <inheritdoc />
     public ParallelTestClassRunner(ITestClass testClass,
         IReflectionTypeInfo @class,
         IEnumerable<IXunitTestCase> testCases,
@@ -18,21 +22,41 @@ internal sealed class ParallelTestClassRunner : XunitTestClassRunner
         IDictionary<Type, object> collectionFixtureMappings)
         : base(testClass, @class, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator, cancellationTokenSource, collectionFixtureMappings)
     {
+        _disableTestParallelizationOnAssembly = 
+            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
     }
 
+    /// <summary>
+    /// Create ParallelTestMethodRunner
+    /// </summary>
+    /// <param name="testMethod"></param>
+    /// <param name="method"></param>
+    /// <param name="testCases"></param>
+    /// <param name="constructorArguments"></param>
+    /// <returns></returns>
+    protected virtual ParallelTestMethodRunner CreateRunner(ITestMethod testMethod,
+        IReflectionMethodInfo method,
+        IEnumerable<IXunitTestCase> testCases,
+        object?[] constructorArguments)
+    {
+        return new ParallelTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink,
+            MessageBus,
+            new ExceptionAggregator(Aggregator),
+            CancellationTokenSource, constructorArguments);
+    }
+
+    /// <inheritdoc />
     protected override Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod,
         IReflectionMethodInfo method,
         IEnumerable<IXunitTestCase> testCases,
         object?[] constructorArguments)
     {
-        var inst = new ParallelTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink,
-            MessageBus,
-            new ExceptionAggregator(Aggregator),
-            CancellationTokenSource, constructorArguments);
-         var result = inst.RunAsync();
-         return result;
+        var inst = CreateRunner(testMethod, method, testCases, constructorArguments);
+        var result = inst.RunAsync();
+        return result;
     }
 
+    /// <inheritdoc />
     protected override async Task<RunSummary> RunTestMethodsAsync()
     {
         var disableParallelizationAttribute = TestClass.Class.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any();
@@ -40,7 +64,7 @@ internal sealed class ParallelTestClassRunner : XunitTestClassRunner
         var disableParallelizationOnCustomCollection = TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
                                                        && !TestClass.Class.GetCustomAttributes(typeof(EnableParallelizationAttribute)).Any();
 
-        var disableParallelization = disableParallelizationAttribute || disableParallelizationOnCustomCollection;
+        var disableParallelization = _disableTestParallelizationOnAssembly || disableParallelizationAttribute || disableParallelizationOnCustomCollection;
 
         if (disableParallelization)
             return await base.RunTestMethodsAsync().ConfigureAwait(false);
@@ -71,6 +95,7 @@ internal sealed class ParallelTestClassRunner : XunitTestClassRunner
         return summary;
     }
 
+    /// <inheritdoc />
     protected override object?[] CreateTestClassConstructorArguments()
     {
         var isStaticClass = Class.Type.GetTypeInfo().IsAbstract && Class.Type.GetTypeInfo().IsSealed;
