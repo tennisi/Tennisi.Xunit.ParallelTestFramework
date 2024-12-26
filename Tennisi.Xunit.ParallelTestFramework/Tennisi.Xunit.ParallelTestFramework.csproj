@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net7.0-windows;net8.0;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Run xUnit test cases in parallel</Description>
@@ -17,9 +17,7 @@
 
   <ItemGroup>
     <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net7.0\" />
-    <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net7.0-windows\" />
     <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0\" />
-    <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0-windows\" />
   </ItemGroup>
   
   <ItemGroup>

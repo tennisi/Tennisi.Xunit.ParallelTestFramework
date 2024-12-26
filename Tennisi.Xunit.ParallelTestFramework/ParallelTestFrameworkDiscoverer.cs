@@ -1,25 +1,29 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
+/// <inheritdoc />
+public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
 {
     private readonly IAssemblyInfo _assemblyInfo;
 
+    /// <inheritdoc />
     public ParallelTestFrameworkDiscoverer(IAssemblyInfo assemblyInfo, ISourceInformationProvider sourceProvider, IMessageSink diagnosticMessageSink, IXunitTestCollectionFactory? collectionFactory = null) : base(assemblyInfo, sourceProvider, diagnosticMessageSink, collectionFactory)
     {
         _assemblyInfo = assemblyInfo;
     }
 
+    /// <inheritdoc />
+    [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "XunitTestFrameworkDiscoverer has the necessary parameters")]
     protected override bool FindTestsForMethod(ITestMethod testMethod, bool includeSourceInformation,
         IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions)
     {
-        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions,
-            "xunit.discovery.PreEnumerateTheories", true);
+        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
         
         if (!testMethod.ShouldUseClassRetry(out var retryCount))
             return base.FindTestsForMethod(testMethod, includeSourceInformation, messageBus, discoveryOptions);
@@ -81,10 +85,12 @@ internal sealed class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscove
         return true;
     }
 
+    /// <inheritdoc />
+    [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "xUnitTestFrameworkDiscoverer has the necessary parameters")]
     protected override bool FindTestsForType(ITestClass testClass, bool includeSourceInformation, IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions)
     {
-        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions, "xunit.discovery.PreEnumerateTheories", true);
+        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
         return base.FindTestsForType(testClass, includeSourceInformation, messageBus, discoveryOptions);
     }
 }
