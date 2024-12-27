@@ -51,5 +51,4 @@
         <None Include="build/**/*.props" Pack="true" PackagePath="build" />
         <None Include="buildMultiTargeting/**/*.props" Pack="true" PackagePath="buildMultiTargeting" />
     </ItemGroup>
-
 </Project>
