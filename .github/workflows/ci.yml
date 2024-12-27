@@ -48,11 +48,6 @@ jobs:
           dotnet build Tennisi.Xunit.ParallelTestFramework.UI.sln /property:Configuration=Release --no-restore
         shell: pwsh
 
-      - name: Docs
-        run: |
-          dotnet run --project DocGen
-        shell: pwsh
-
       - name: Run tests
         run: |
           dotnet build Tennisi.Xunit.ParallelTestFramework.UI.sln --configuration Debug

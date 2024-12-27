@@ -10,11 +10,6 @@
   <PropertyGroup>
     <FullTestParallelization>true</FullTestParallelization>
   </PropertyGroup>
-
-  <Target Name="Docs" AfterTargets="Build">
-    <Exec Command="dotnet build ../DocGen/DocGen.csproj" />
-    <Exec Command="dotnet run --project ../DocGen/DocGen.csproj" />
-  </Target>
   
   <ImportGroup>
     <Import Project="../Tennisi.Xunit.ParallelTestFramework/build/Tennisi.Xunit.ParallelTestFramework.props" />
