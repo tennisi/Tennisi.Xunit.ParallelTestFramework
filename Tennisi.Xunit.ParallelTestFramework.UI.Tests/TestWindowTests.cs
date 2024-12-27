@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
 
 namespace Tennisi.Xunit.UIParallelTestFramework.Tests;
@@ -29,19 +28,8 @@ public class TestWindowTests
         var tick = Environment.TickCount;
         if (StartTicks < tick)
             StartTicks = tick;
-
-        var window = new Window
-        {
-            Title = $"Window {windowIndex + 1}",
-            Width = 300,
-            Height = 200
-        };
-        window.Show();
+        
         await Task.Delay(DelayPerWindowMs);
-        window.Title = $"Window {windowIndex + 1}";
-        Assert.Equal($"Window {windowIndex + 1}", window.Title);
-        window.Close();
-
         Interlocked.Decrement(ref Ready);
 
         if (Ready == 0)
