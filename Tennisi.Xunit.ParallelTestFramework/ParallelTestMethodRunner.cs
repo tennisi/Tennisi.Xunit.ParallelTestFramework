@@ -12,7 +12,7 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
     private readonly IMessageSink _diagnosticMessageSink;
     private readonly object?[] _constructorArguments;
 
-    private TimeSpan TimeLimit = TimeSpan.FromSeconds(120);
+    private TimeSpan _timeLimit = TimeSpan.FromSeconds(120);
 
     /// <inheritdoc />
     public ParallelTestMethodRunner(ITestMethod testMethod,
@@ -107,9 +107,9 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
 #if DEBUG
             _diagnosticMessageSink.OnMessage(new DiagnosticMessage($"STARTED: {testDetails}"));
 #endif
-            using var timer = new Timer(_ => _diagnosticMessageSink.OnMessage(new DiagnosticMessage($"WARNING: {testDetails} has been running for more than {Math.Round(TimeLimit.TotalMinutes, 2)} minutes")),
+            using var timer = new Timer(_ => _diagnosticMessageSink.OnMessage(new DiagnosticMessage($"WARNING: {testDetails} has been running for more than {Math.Round(_timeLimit.TotalMinutes, 2)} minutes")),
                 null,
-                TimeLimit,
+                _timeLimit,
                 Timeout.InfiniteTimeSpan);
 
             var result = await RunExtendedTestCaseAsync(testCase, args);

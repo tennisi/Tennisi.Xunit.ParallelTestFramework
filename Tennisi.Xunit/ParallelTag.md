@@ -22,6 +22,30 @@ public struct ParallelTag : IEquatable<ParallelTag>
 | [operator ==](ParallelTag/op_Equality.md) | Determines whether two [`ParallelTag`](./ParallelTag.md) instances are equal. |
 | [operator !=](ParallelTag/op_Inequality.md) | Determines whether two [`ParallelTag`](./ParallelTag.md) instances are not equal. |
 
+## Remarks
+
+Can be used only with `FullTestParallelizationAttribute`
+
+## Examples
+
+```csharp
+public class MyTests
+{
+    private readonly int _betId;
+    
+    public MyTests(ITestOutputHelper helper, ParallelTag tag = new())
+    {
+        _betId = tag.AsLong();
+    }
+    
+    [Fact]
+    public void Do()
+    {
+       
+    }   
+}
+```
+
 ## See Also
 
 * namespace [Tennisi.Xunit](../Tennisi.Xunit.ParallelTestFramework.md)

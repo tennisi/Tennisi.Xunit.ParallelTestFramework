@@ -123,3 +123,33 @@ public class MySecondTestClass
     //...
 }
 ```
+
+## Achieving Maximum Productivity
+
+Use the `FullTestParallelizationAttribute` on an assembly and inject `ParallelTag` into the constructor of each of your tests.
+
+```c#
+public class MyTests
+{
+    private readonly int _betId;
+    
+    public MyTests(ITestOutputHelper helper, ParallelTag tag = new())
+    {
+        _betId = tag.AsLong();
+    }
+    
+    [Fact]
+    public void Do()
+    {
+       
+    }   
+}
+```
+
+This strategy will allow you to run each Fact or Theory variant in parallel. Each time xUnit starts your test, a new unique but constant ParallelTag will be injected into your test class, allowing your test to work with unique data without interfering with other tests.
+
+## WinForms/WPF Applications
+
+STA model apps should use the `Tennisi.Xunit.ParallelTestFramework.UI` package.
+
+

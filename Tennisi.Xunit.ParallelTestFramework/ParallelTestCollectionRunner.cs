@@ -6,6 +6,8 @@ namespace Tennisi.Xunit;
 /// <inheritdoc />
 internal class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
 {
+    private readonly bool _disableTestParallelizationOnAssembly;
+
     /// <inheritdoc />
     public ParallelTestTestCollectionRunner(ITestCollection testCollection,
         IEnumerable<IXunitTestCase> testCases,
@@ -17,6 +19,8 @@ internal class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
         : base(testCollection, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator,
             cancellationTokenSource)
     {
+        _disableTestParallelizationOnAssembly = 
+            ParallelSettings.GetSetting(testCollection.TestAssembly.Assembly.Name, "xunit.execution.DisableParallelization");
     }
     
     /// <summary>
@@ -49,6 +53,9 @@ internal class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
     /// <inheritdoc />
     protected override async Task<RunSummary> RunTestClassesAsync()
     {
+        if (_disableTestParallelizationOnAssembly)
+            return await base.RunTestClassesAsync().ConfigureAwait(false);
+        
         if (TestCollection.CollectionDefinition == null)
         {
             var summary = new RunSummary();
@@ -68,8 +75,7 @@ internal class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
 
             return summary;
         }
-
-        // Fall back to default behavior
+        
         return await base.RunTestClassesAsync().ConfigureAwait(false);
     }
 }

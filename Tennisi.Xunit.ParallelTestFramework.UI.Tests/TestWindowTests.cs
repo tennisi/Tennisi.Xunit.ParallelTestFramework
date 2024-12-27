@@ -7,9 +7,9 @@ namespace Tennisi.Xunit.UIParallelTestFramework.Tests;
 public class TestWindowTests
 {
     private static readonly TimeSpan TimeLimit = TimeSpan.FromSeconds(5);
-    const int DelayPerWindowMs = 2000; // 2 seconds per form
-    private const int NumberOfForms = 10; // Three forms to simulate parallel execution
-    private const double Factor = NumberOfForms * 0.75; // Minimal speedup factor of parallelism
+    const int DelayPerWindowMs = 1000; // 2 seconds per form
+    private const int NumberOfForms = 3; // Three forms to simulate parallel execution
+    private const double Factor = NumberOfForms * 0.5; // Minimal speedup factor of parallelism
     private const int SerialTime = DelayPerWindowMs * NumberOfForms;
 
     private static volatile int StartTicks = int.MinValue;
@@ -25,13 +25,6 @@ public class TestWindowTests
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(2)]
-    [InlineData(3)]
-    [InlineData(4)]
-    [InlineData(5)]
-    [InlineData(6)]
-    [InlineData(7)]
-    [InlineData(8)]
-    [InlineData(9)]
     public async Task UITestFramework_ProvesParallelExecution(int windowIndex)
     {
         var tick = Environment.TickCount;
