@@ -7,7 +7,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
+internal class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
 {
     private readonly IAssemblyInfo _assemblyInfo;
 

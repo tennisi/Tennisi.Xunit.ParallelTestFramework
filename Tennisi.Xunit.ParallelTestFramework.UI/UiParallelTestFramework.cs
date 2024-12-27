@@ -18,7 +18,7 @@ namespace Tennisi.Xunit;
 /// </code>
 /// Combine with the <c>ParallelTag</c> instrument for optimized test tagging in parallelized scenarios.
 /// </example>
-public class UiParallelTestFramework : ParallelTestFramework
+internal class UiParallelTestFramework : ParallelTestFramework
 {
     /// <inheritdoc />
     public UiParallelTestFramework(IMessageSink messageSink) : base(messageSink)

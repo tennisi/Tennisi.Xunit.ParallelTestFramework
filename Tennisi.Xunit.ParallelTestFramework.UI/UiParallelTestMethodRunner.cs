@@ -6,7 +6,7 @@ using System.Windows.Threading;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class UiParallelTestMethodRunner : ParallelTestMethodRunner
+internal class UiParallelTestMethodRunner : ParallelTestMethodRunner
 {
     /// <inheritdoc />
     public UiParallelTestMethodRunner(ITestMethod testMethod, IReflectionTypeInfo @class, IReflectionMethodInfo method,

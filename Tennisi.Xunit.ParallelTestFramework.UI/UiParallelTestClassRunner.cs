@@ -4,7 +4,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class UiParallelTestClassRunner : ParallelTestClassRunner 
+internal class UiParallelTestClassRunner : ParallelTestClassRunner 
 {
     /// <inheritdoc />
     public UiParallelTestClassRunner(ITestClass testClass, IReflectionTypeInfo @class, IEnumerable<IXunitTestCase> testCases, IMessageSink diagnosticMessageSink, IMessageBus messageBus, ITestCaseOrderer testCaseOrderer, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, IDictionary<Type, object> collectionFixtureMappings) : base(testClass, @class, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator, cancellationTokenSource, collectionFixtureMappings)

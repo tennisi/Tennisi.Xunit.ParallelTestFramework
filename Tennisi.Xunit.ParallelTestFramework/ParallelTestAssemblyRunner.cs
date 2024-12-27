@@ -4,7 +4,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class ParallelTestAssemblyRunner : XunitTestAssemblyRunner
+internal class ParallelTestAssemblyRunner : XunitTestAssemblyRunner
 {
     /// <inheritdoc />
     public ParallelTestAssemblyRunner(ITestAssembly testAssembly,

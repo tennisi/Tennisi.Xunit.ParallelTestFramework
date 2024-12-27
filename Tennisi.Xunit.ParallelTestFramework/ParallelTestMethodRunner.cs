@@ -6,13 +6,13 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class ParallelTestMethodRunner : XunitTestMethodRunner
+internal class ParallelTestMethodRunner : XunitTestMethodRunner
 {
     private readonly bool _disableTestParallelizationOnAssembly;
     private readonly IMessageSink _diagnosticMessageSink;
     private readonly object?[] _constructorArguments;
 
-    private static readonly TimeSpan TimeLimit = TimeSpan.FromSeconds(120);
+    private TimeSpan TimeLimit = TimeSpan.FromSeconds(120);
 
     /// <inheritdoc />
     public ParallelTestMethodRunner(ITestMethod testMethod,

@@ -4,7 +4,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class UiParallelTestTestCollectionRunner : ParallelTestTestCollectionRunner
+internal class UiParallelTestTestCollectionRunner : ParallelTestTestCollectionRunner
 {
     /// <inheritdoc />
     public UiParallelTestTestCollectionRunner(ITestCollection testCollection,

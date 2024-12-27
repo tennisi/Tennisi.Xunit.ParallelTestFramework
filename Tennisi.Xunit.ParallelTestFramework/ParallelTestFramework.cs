@@ -19,7 +19,7 @@ namespace Tennisi.Xunit;
 /// </code>
 /// Additionally, take advantage of the <c>ParallelTag</c> instrument to ensure unique tagging in parallelized tests.
 /// </example>
-public class ParallelTestFramework : XunitTestFramework
+internal class ParallelTestFramework : XunitTestFramework
 {
     /// <inheritdoc />
     [SuppressMessage("ReSharper", "ConditionalAccessQualifierIsNonNullableAccordingToAPIContract", Justification = "By Author")]

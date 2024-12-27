@@ -6,7 +6,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class ParallelTestClassRunner : XunitTestClassRunner
+internal class ParallelTestClassRunner : XunitTestClassRunner
 {
     private readonly bool _disableTestParallelizationOnAssembly;
 

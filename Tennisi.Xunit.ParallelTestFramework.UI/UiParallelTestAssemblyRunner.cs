@@ -4,7 +4,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class UiParallelTestAssemblyRunner : ParallelTestAssemblyRunner
+internal class UiParallelTestAssemblyRunner : ParallelTestAssemblyRunner
 {
     /// <inheritdoc />
     public UiParallelTestAssemblyRunner(ITestAssembly testAssembly, IEnumerable<IXunitTestCase> testCases, IMessageSink diagnosticMessageSink, IMessageSink executionMessageSink, ITestFrameworkExecutionOptions executionOptions) : base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)

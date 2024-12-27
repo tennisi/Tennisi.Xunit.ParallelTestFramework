@@ -6,7 +6,7 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-public class ParallelTestFrameworkExecutor : XunitTestFrameworkExecutor
+internal class ParallelTestFrameworkExecutor : XunitTestFrameworkExecutor
 {
     private readonly AssemblyName _assemblyName;
 
