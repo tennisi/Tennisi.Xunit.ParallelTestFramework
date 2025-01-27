@@ -5,8 +5,12 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestClassRunner : XunitTestClassRunner
+/// <inheritdoc />
+internal class ParallelTestClassRunner : XunitTestClassRunner
 {
+    private readonly bool _disableTestParallelizationOnAssembly;
+
+    /// <inheritdoc />
     public ParallelTestClassRunner(ITestClass testClass,
         IReflectionTypeInfo @class,
         IEnumerable<IXunitTestCase> testCases,
@@ -18,21 +22,47 @@ internal sealed class ParallelTestClassRunner : XunitTestClassRunner
         IDictionary<Type, object> collectionFixtureMappings)
         : base(testClass, @class, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator, cancellationTokenSource, collectionFixtureMappings)
     {
+        _disableTestParallelizationOnAssembly = 
+            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
     }
 
+    /// <summary>
+    /// Creates a custom test method runner for executing test methods in parallel.
+    /// </summary>
+    /// <param name="testMethod">The test method to be executed.</param>
+    /// <param name="method">Reflection information about the test method.</param>
+    /// <param name="testCases">The collection of test cases to execute with the method.</param>
+    /// <param name="constructorArguments">Arguments to be passed to the test class constructor.</param>
+    /// <returns>
+    /// A <see cref="ParallelTestMethodRunner"/> instance responsible for executing the test method.
+    /// </returns>
+    /// <remarks>
+    /// This method can be overridden to provide a custom implementation of the test method runner,
+    /// enabling specialized behavior for test execution.
+    /// </remarks>
+    protected virtual ParallelTestMethodRunner CreateMethodRunner(ITestMethod testMethod,
+        IReflectionMethodInfo method,
+        IEnumerable<IXunitTestCase> testCases,
+        object?[] constructorArguments)
+    {
+        return new ParallelTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink,
+            MessageBus,
+            new ExceptionAggregator(Aggregator),
+            CancellationTokenSource, constructorArguments);
+    }
+
+    /// <inheritdoc />
     protected override Task<RunSummary> RunTestMethodAsync(ITestMethod testMethod,
         IReflectionMethodInfo method,
         IEnumerable<IXunitTestCase> testCases,
         object?[] constructorArguments)
     {
-        var inst = new ParallelTestMethodRunner(testMethod, Class, method, testCases, DiagnosticMessageSink,
-            MessageBus,
-            new ExceptionAggregator(Aggregator),
-            CancellationTokenSource, constructorArguments);
-         var result = inst.RunAsync();
-         return result;
+        var inst = CreateMethodRunner(testMethod, method, testCases, constructorArguments);
+        var result = inst.RunAsync();
+        return result;
     }
 
+    /// <inheritdoc />
     protected override async Task<RunSummary> RunTestMethodsAsync()
     {
         var disableParallelizationAttribute = TestClass.Class.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any();
@@ -40,7 +70,7 @@ internal sealed class ParallelTestClassRunner : XunitTestClassRunner
         var disableParallelizationOnCustomCollection = TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
                                                        && !TestClass.Class.GetCustomAttributes(typeof(EnableParallelizationAttribute)).Any();
 
-        var disableParallelization = disableParallelizationAttribute || disableParallelizationOnCustomCollection;
+        var disableParallelization = _disableTestParallelizationOnAssembly || disableParallelizationAttribute || disableParallelizationOnCustomCollection;
 
         if (disableParallelization)
             return await base.RunTestMethodsAsync().ConfigureAwait(false);
@@ -71,6 +101,7 @@ internal sealed class ParallelTestClassRunner : XunitTestClassRunner
         return summary;
     }
 
+    /// <inheritdoc />
     protected override object?[] CreateTestClassConstructorArguments()
     {
         var isStaticClass = Class.Type.GetTypeInfo().IsAbstract && Class.Type.GetTypeInfo().IsSealed;

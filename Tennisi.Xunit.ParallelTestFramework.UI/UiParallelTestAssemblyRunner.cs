@@ -4,15 +4,10 @@ using Xunit.Sdk;
 namespace Tennisi.Xunit;
 
 /// <inheritdoc />
-internal class ParallelTestAssemblyRunner : XunitTestAssemblyRunner
+internal class UiParallelTestAssemblyRunner : ParallelTestAssemblyRunner
 {
     /// <inheritdoc />
-    public ParallelTestAssemblyRunner(ITestAssembly testAssembly,
-        IEnumerable<IXunitTestCase> testCases,
-        IMessageSink diagnosticMessageSink,
-        IMessageSink executionMessageSink,
-        ITestFrameworkExecutionOptions executionOptions)
-        : base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)
+    public UiParallelTestAssemblyRunner(ITestAssembly testAssembly, IEnumerable<IXunitTestCase> testCases, IMessageSink diagnosticMessageSink, IMessageSink executionMessageSink, ITestFrameworkExecutionOptions executionOptions) : base(testAssembly, testCases, diagnosticMessageSink, executionMessageSink, executionOptions)
     {
     }
 
@@ -22,7 +17,7 @@ internal class ParallelTestAssemblyRunner : XunitTestAssemblyRunner
         IEnumerable<IXunitTestCase> testCases,
         CancellationTokenSource cancellationTokenSource)
     {
-        var runner = new ParallelTestTestCollectionRunner(
+        var runner = new UiParallelTestTestCollectionRunner(
             testCollection,
             testCases,
             DiagnosticMessageSink,

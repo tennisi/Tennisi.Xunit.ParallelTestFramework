@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net7.0-windows;net8.0-windows</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <UseWpf>true</UseWpf>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <NoWarn>$(NoWarn);CA1515</NoWarn>
+        <RootNamespace>Tennisi.Xunit.UIParallelTestFramework.Tests</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <FullTestParallelization>true</FullTestParallelization>
+    </PropertyGroup>
+
+    <ImportGroup>
+        <Import Project="../Tennisi.Xunit.ParallelTestFramework.UI/build/Tennisi.Xunit.ParallelTestFramework.UI.props" />
+    </ImportGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+        <PackageReference Include="xunit" Version="2.9.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Xunit.StaFact" Version="1.1.11" />
+        <PackageReference Include="xunit.extensibility.execution" Version="2.9.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Tennisi.Xunit.ParallelTestFramework.UI\Tennisi.Xunit.ParallelTestFramework.UI.csproj" />
+      <ProjectReference Include="..\Tennisi.Xunit.ParallelTestFramework\Tennisi.Xunit.ParallelTestFramework.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="xunit.runner.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+ 
+</Project>

@@ -8,6 +8,28 @@ namespace Tennisi.Xunit;
 /// A readonly structure that serves as a <c>Xunit</c> fixture to provide unique but constant value for test fact or theory version,
 /// facilitating parallel execution of tests while ensuring consistency in tagging.
 /// </summary>
+/// <remarks>
+/// Can be used only with <c>FullTestParallelizationAttribute</c>
+/// </remarks>
+/// <example>
+/// <code>
+/// public class MyTests
+/// {
+///     private readonly int _betId;
+///     
+///     public MyTests(ITestOutputHelper helper, ParallelTag tag = new())
+///     {
+///         _betId = tag.AsLong();
+///     }
+///     
+///     [Fact]
+///     public void Do()
+///     {
+///        
+///     }   
+/// }
+/// </code>
+/// </example>
 public readonly struct ParallelTag : IEquatable<ParallelTag>
 {
     private readonly string _value;

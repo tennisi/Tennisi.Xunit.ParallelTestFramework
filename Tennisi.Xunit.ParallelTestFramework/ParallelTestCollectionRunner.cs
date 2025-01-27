@@ -3,8 +3,12 @@ using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
-internal sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
+/// <inheritdoc />
+internal class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
 {
+    private readonly bool _disableTestParallelizationOnAssembly;
+
+    /// <inheritdoc />
     public ParallelTestTestCollectionRunner(ITestCollection testCollection,
         IEnumerable<IXunitTestCase> testCases,
         IMessageSink diagnosticMessageSink,
@@ -15,17 +19,43 @@ internal sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunn
         : base(testCollection, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator,
             cancellationTokenSource)
     {
+        _disableTestParallelizationOnAssembly = 
+            ParallelSettings.GetSetting(testCollection.TestAssembly.Assembly.Name, "xunit.execution.DisableParallelization");
+    }
+    
+    /// <summary>
+    /// Creates a custom test class runner for executing tests in parallel within a class.
+    /// </summary>
+    /// <param name="testClass">The test class to be executed.</param>
+    /// <param name="classT">Reflection information about the test class.</param>
+    /// <param name="testCases">The collection of test cases to execute within the class.</param>
+    /// <returns>
+    /// A <see cref="ParallelTestClassRunner"/> instance responsible for executing tests in the given test class.
+    /// </returns>
+    /// <remarks>
+    /// This method can be overridden to provide a custom implementation of the test class runner,
+    /// enabling specialized behavior for running tests within a class.
+    /// </remarks>
+    protected virtual ParallelTestClassRunner CreateClassRunner(ITestClass testClass, IReflectionTypeInfo classT,
+        IEnumerable<IXunitTestCase> testCases)
+    {
+        return new ParallelTestClassRunner(testClass, classT, testCases, DiagnosticMessageSink, MessageBus,
+            TestCaseOrderer, new ExceptionAggregator(Aggregator), CancellationTokenSource,
+            CollectionFixtureMappings);
     }
 
+    /// <inheritdoc />
     protected override Task<RunSummary> RunTestClassAsync(ITestClass testClass, IReflectionTypeInfo @class,
         IEnumerable<IXunitTestCase> testCases)
-        => new ParallelTestClassRunner(testClass, @class, testCases, DiagnosticMessageSink, MessageBus,
-                TestCaseOrderer, new ExceptionAggregator(Aggregator), CancellationTokenSource,
-                CollectionFixtureMappings)
+        => CreateClassRunner(testClass, @class, testCases)
             .RunAsync();
 
+    /// <inheritdoc />
     protected override async Task<RunSummary> RunTestClassesAsync()
     {
+        if (_disableTestParallelizationOnAssembly)
+            return await base.RunTestClassesAsync().ConfigureAwait(false);
+        
         if (TestCollection.CollectionDefinition == null)
         {
             var summary = new RunSummary();
@@ -45,8 +75,7 @@ internal sealed class ParallelTestTestCollectionRunner : XunitTestCollectionRunn
 
             return summary;
         }
-
-        // Fall back to default behavior
+        
         return await base.RunTestClassesAsync().ConfigureAwait(false);
     }
 }
