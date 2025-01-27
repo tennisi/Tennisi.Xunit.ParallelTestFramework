@@ -1,0 +1,1 @@
+﻿[assembly: Xunit.TestFramework(typeof(Tennisi.Xunit.v3.ParallelTestFramework))]

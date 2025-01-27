@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Description>Run xUnit.v3 test cases in parallel</Description>
+        <IsPackable>True</IsPackable>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RootNamespace>Tennisi.Xunit.v3</RootNamespace>
+        <NoWarn>$(NoWarn);CA1812</NoWarn>
+        <LangVersion>12.0</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net7.0\" />
+        <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0\" />
+    </ItemGroup>
+
+
+
+    <ItemGroup>
+        <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildProjectDirectory)/../README.md" Pack="true" PackagePath="" />
+        <None Include="build/**/*.props" Pack="true" PackagePath="build" />
+        <None Include="buildMultiTargeting/**/*.props" Pack="true" PackagePath="buildMultiTargeting" />
+    </ItemGroup>
+
+</Project>
