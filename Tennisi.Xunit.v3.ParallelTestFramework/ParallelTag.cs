@@ -5,7 +5,7 @@ using Xunit.v3;
 namespace Tennisi.Xunit.v3;
 
 /// <summary>
-/// A readonly structure that serves as a <c>Xunit</c> fixture to provide unique but constant value for test fact or theory version,
+/// A readonly structure that serves as a <c>Xunit.V3</c> fixture to provide unique but constant value for test fact or theory version,
 /// facilitating parallel execution of tests while ensuring consistency in tagging.
 /// </summary>
 /// <remarks>

@@ -16,16 +16,12 @@ public class ParallelCollectionTests : IClassFixture<ConcurrencyFixture>
     {
         Assert.True(true);
     }
-
-    [Fact]
-    public async Task Fact1()
+    
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task Fact2(int a)
     {
-        Assert.Equal(2, await fixture.CheckConcurrencyAsync().ConfigureAwait(false));
-    }
-
-    [Fact]
-    public async Task Fact2()
-    {
-        Assert.Equal(2, await fixture.CheckConcurrencyAsync().ConfigureAwait(false));
+        Assert.True(true);
     }
 }

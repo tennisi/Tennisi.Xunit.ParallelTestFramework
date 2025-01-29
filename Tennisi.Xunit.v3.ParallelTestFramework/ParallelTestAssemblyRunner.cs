@@ -5,21 +5,19 @@ using Xunit.v3;
 
 namespace Tennisi.Xunit.v3;
 
-/// <summary>
-/// The test assembly runner for xUnit.net v3 tests (with overridable context).
-/// </summary>
-public class ParallelTestAssemblyRunner<TContext, TTestAssembly, TTestCollection, TTestCase> :
-	TestAssemblyRunner<TContext, TTestAssembly, TTestCollection, TTestCase>
-		where TContext : ParallelTestAssemblyRunnerContext<TTestAssembly, TTestCase>
-		where TTestAssembly : class, IXunitTestAssembly
-		where TTestCollection : class, IXunitTestCollection
-		where TTestCase : class, IXunitTestCase
+public class ParallelTestAssemblyRunner :
+	ParallelTestAssemblyRunnerBase<ParallelTestAssemblyRunnerContext, IXunitTestAssembly, IXunitTestCollection, IXunitTestCase>
 {
-	
+	/// <summary>
+	/// Initializes a new instance of the <see cref="XunitTestAssemblyRunner"/> class.
+	/// </summary>
+	protected ParallelTestAssemblyRunner()
+	{ }
+
 	/// <summary>
 	/// Gets the singleton instance of <see cref="XunitTestAssemblyRunner"/>.
 	/// </summary>
-	public static ParallelTestAssemblyRunner<TContext, TTestAssembly> Instance { get; } = new();
+	public static ParallelTestAssemblyRunner Instance { get; } = new();
 
 	/// <summary>
 	/// Runs the test assembly.
@@ -39,15 +37,26 @@ public class ParallelTestAssemblyRunner<TContext, TTestAssembly, TTestCollection
 		Guard.ArgumentNotNull(executionMessageSink);
 		Guard.ArgumentNotNull(executionOptions);
 
-		await using var ctxt = new XunitTestAssemblyRunnerContext(testAssembly, testCases, executionMessageSink, executionOptions);
+		await using var ctxt = new ParallelTestAssemblyRunnerContext(testAssembly, testCases, executionMessageSink, executionOptions);
 		await ctxt.InitializeAsync();
 
 		return await Run(ctxt);
 	}
-	
+}
+
+/// <summary>
+/// The test assembly runner for xUnit.net v3 tests (with overridable context).
+/// </summary>
+public class ParallelTestAssemblyRunnerBase<TContext, TTestAssembly, TTestCollection, TTestCase> :
+	TestAssemblyRunner<TContext, TTestAssembly, TTestCollection, TTestCase>
+		where TContext : ParallelTestAssemblyRunnerBaseContext<TTestAssembly, TTestCase>
+		where TTestAssembly : class, IXunitTestAssembly
+		where TTestCollection : class, IXunitTestCollection
+		where TTestCase : class, IXunitTestCase
+{
 	/// <inheritdoc/>
 	protected override ValueTask<string> GetTestFrameworkDisplayName(TContext ctxt) =>
-		new("xUnit.net v3");
+		new(nameof(Tennisi.Xunit.v3.ParallelTestFramework));
 
 	/// <inheritdoc/>
 	protected override async ValueTask<bool> OnTestAssemblyFinished(
@@ -196,5 +205,4 @@ public class ParallelTestAssemblyRunner<TContext, TTestAssembly, TTestCollection
 		return ctxt.RunTestCollection(testCollection, testCases, testCaseOrderer);
 	}
 }
-
 

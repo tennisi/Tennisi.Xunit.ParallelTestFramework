@@ -39,9 +39,5 @@
 
         <None Include="ParallelCollectionTests.cs" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="AssemblyInfo.Tennisi.cs" />
-    </ItemGroup>
     
 </Project>

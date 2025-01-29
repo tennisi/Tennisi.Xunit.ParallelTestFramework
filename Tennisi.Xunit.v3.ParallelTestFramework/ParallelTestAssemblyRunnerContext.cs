@@ -11,13 +11,28 @@ using Xunit.v3;
 namespace Tennisi.Xunit.v3;
 
 /// <summary>
+/// Context class for <see cref="XunitTestAssemblyRunner"/>.
+/// </summary>
+/// <param name="testAssembly">The test assembly</param>
+/// <param name="testCases">The test cases from the assembly</param>
+/// <param name="executionMessageSink">The message sink to send execution messages to</param>
+/// <param name="executionOptions">The options used during test execution</param>
+public class ParallelTestAssemblyRunnerContext(
+	IXunitTestAssembly testAssembly,
+	IReadOnlyCollection<IXunitTestCase> testCases,
+	IMessageSink executionMessageSink,
+	ITestFrameworkExecutionOptions executionOptions) :
+	ParallelTestAssemblyRunnerBaseContext<IXunitTestAssembly, IXunitTestCase>(testAssembly, testCases, executionMessageSink, executionOptions)
+{ }
+
+/// <summary>
 /// Context class for <see cref="XunitTestAssemblyRunnerBase{TContext, TTestAssembly, TTestCollection, TTestCase}"/>.
 /// </summary>
 /// <param name="testAssembly">The test assembly</param>
 /// <param name="testCases">The test cases from the assembly</param>
 /// <param name="executionMessageSink">The message sink to send execution messages to</param>
 /// <param name="executionOptions">The options used during test execution</param>
-public class ParallelTestAssemblyRunnerContext<TTestAssembly, TTestCase>(
+public class ParallelTestAssemblyRunnerBaseContext<TTestAssembly, TTestCase>(
 	TTestAssembly testAssembly,
 	IReadOnlyCollection<TTestCase> testCases,
 	IMessageSink executionMessageSink,
@@ -160,7 +175,7 @@ public class ParallelTestAssemblyRunnerContext<TTestAssembly, TTestCase>(
 
 		try
 		{
-			return await XunitTestCollectionRunner.Instance.Run(
+			return await ParallelTestCollectionRunner.Instance.Run(
 				testCollection,
 				testCases,
 				ExplicitOption,

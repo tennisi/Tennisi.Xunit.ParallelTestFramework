@@ -9,7 +9,7 @@ namespace Tennisi.Xunit.v3;
 /// <summary>
 /// The test method runner for xUnit.net v3 tests.
 /// </summary>
-public class ParallelTestMethodRunner : XunitTestMethodRunnerBase<ParallelTestMethodRunnerContext, IXunitTestMethod, IXunitTestCase>
+public class ParallelTestMethodRunner : ParallelTestMethodRunnerBase<ParallelTestMethodRunnerContext, IXunitTestMethod, IXunitTestCase>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="XunitTestMethodRunner"/> class.
@@ -51,3 +51,40 @@ public class ParallelTestMethodRunner : XunitTestMethodRunnerBase<ParallelTestMe
         return await Run(ctxt);
     }
 }
+
+public class ParallelTestMethodRunnerBase<TContext, TTestMethod, TTestCase> :
+    TestMethodRunner<TContext, TTestMethod, TTestCase>
+    where TContext : XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>
+    where TTestMethod : class, IXunitTestMethod
+    where TTestCase : class, IXunitTestCase
+{
+    /// <summary>
+    /// Runs the test case.
+    /// </summary>
+    /// <inheritdoc/>
+    protected override ValueTask<RunSummary> RunTestCase(
+        TContext ctxt,
+        TTestCase testCase)
+    {
+        Guard.ArgumentNotNull(ctxt);
+        Guard.ArgumentNotNull(testCase);
+
+        if (testCase is ISelfExecutingXunitTestCase selfExecutingTestCase)
+            return selfExecutingTestCase.Run(ctxt.ExplicitOption, ctxt.MessageBus, ctxt.ConstructorArguments, ctxt.Aggregator.Clone(), ctxt.CancellationTokenSource);
+
+        return XunitRunnerHelper.RunXunitTestCase(
+            testCase,
+            ctxt.MessageBus,
+            ctxt.CancellationTokenSource,
+            ctxt.Aggregator.Clone(),
+            ctxt.ExplicitOption,
+            ctxt.ConstructorArguments
+        );
+    }
+
+    protected override ValueTask<RunSummary> RunTestCases(TContext ctxt, Exception? exception)
+    {
+        return base.RunTestCases(ctxt, exception);
+    }
+}
+
