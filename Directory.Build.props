@@ -21,8 +21,8 @@
   <PropertyGroup>
     <Authors>Tennisi</Authors>
     <Company>Tennisi</Company>
-    <PackageProjectUrl>https://github.com/tennisi/Tennisi.Xunit.ParallelTestFramework</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/tennisi/Tennisi.Xunit.ParallelTestFramework.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/tennisi/Tennisi.Xunit.v2.ParallelTestFramework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tennisi/Tennisi.Xunit.v2.ParallelTestFramework.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

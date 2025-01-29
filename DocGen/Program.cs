@@ -15,12 +15,12 @@ internal static class Program
             var dir = Directory.GetCurrentDirectory();
             while (!File.Exists(Path.Combine(dir, $"{Libraries.First()}.sln")))
                 dir = Path.GetFullPath(Path.Combine(dir, ".."));
-            return dir;
+            return dir.Replace(".v2","");
         }
     }
     private static string SourceDir => Path.Combine(OutputDir, $"{Libraries.First()}");
     private static string FooterFile => Path.Combine(OutputDir, $"DocGen/footer.md");
-    private static string Library => typeof(Tennisi.Xunit.ParallelTag).Assembly.FullName!.Split(',')[0];
+    private static string Library => typeof(Tennisi.Xunit.v2.ParallelTag).Assembly.FullName!.Split(',')[0];
     private static readonly string[] Libraries = {Library};
     private static readonly string[] ArgsArray = Libraries.Union(new[]
     {
