@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extras", "Extras", "{9A500378-4A6A-4024-B63E-66B3B55CD5C4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+		Tennisi.Xunit.v2.ParallelTestFramework.UI\build\Tennisi.Xunit.v2.ParallelTestFramework.UI.props = Tennisi.Xunit.v2.ParallelTestFramework.UI\build\Tennisi.Xunit.v2.ParallelTestFramework.UI.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v2.ParallelTestFramework.UI.Tests", "Tennisi.Xunit.v2.ParallelTestFramework.UI.Tests\Tennisi.Xunit.v2.ParallelTestFramework.UI.Tests.csproj", "{6A473E9C-04B7-4DE4-A78D-6AA05C130722}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v2.ParallelTestFramework.UI", "Tennisi.Xunit.v2.ParallelTestFramework.UI\Tennisi.Xunit.v2.ParallelTestFramework.UI.csproj", "{1797CCF9-DFB7-4654-A239-5E8FD80101C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocGen", "DocGen\DocGen.csproj", "{412D5719-6A74-47D4-9814-7F419A6DDFC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v2.ParallelTestFramework", "Tennisi.Xunit.v2.ParallelTestFramework\Tennisi.Xunit.v2.ParallelTestFramework.csproj", "{7979392A-2314-4071-B4EC-A667BF443CA8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6A473E9C-04B7-4DE4-A78D-6AA05C130722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A473E9C-04B7-4DE4-A78D-6AA05C130722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A473E9C-04B7-4DE4-A78D-6AA05C130722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A473E9C-04B7-4DE4-A78D-6AA05C130722}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1797CCF9-DFB7-4654-A239-5E8FD80101C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1797CCF9-DFB7-4654-A239-5E8FD80101C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1797CCF9-DFB7-4654-A239-5E8FD80101C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1797CCF9-DFB7-4654-A239-5E8FD80101C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{412D5719-6A74-47D4-9814-7F419A6DDFC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{412D5719-6A74-47D4-9814-7F419A6DDFC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{412D5719-6A74-47D4-9814-7F419A6DDFC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{412D5719-6A74-47D4-9814-7F419A6DDFC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7979392A-2314-4071-B4EC-A667BF443CA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7979392A-2314-4071-B4EC-A667BF443CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7979392A-2314-4071-B4EC-A667BF443CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7979392A-2314-4071-B4EC-A667BF443CA8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
