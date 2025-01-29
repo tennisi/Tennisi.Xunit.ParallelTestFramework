@@ -1,4 +1,4 @@
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// Attribute that enables parallel test execution for a class, 

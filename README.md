@@ -4,11 +4,6 @@
 
 | public type | description |
 | --- | --- |
-| class [DisableParallelizationAttribute](./Tennisi.Xunit.v2/DisableParallelizationAttribute.md) | Attribute that disables parallel test execution for a class, overriding any higher-level settings that enable parallelization. |
-| class [DisableTestParallelizationAttribute](./Tennisi.Xunit.v2/DisableTestParallelizationAttribute.md) | Assembly-level attribute that disables `xunit.discovery.PreEnumerateTheories`, `xunit.parallelizeTestCollections`, `xunit.parallelizeAssembly` and enables xunit.execution.DisableParallelization in the xUnit framework. Alternatively, the `DisbaleTestParallelization` property can be set in the project file to achieve the same effect. |
-| class [EnableParallelizationAttribute](./Tennisi.Xunit.v2/EnableParallelizationAttribute.md) | Attribute that enables parallel test execution for a class, overriding any higher-level settings that disable parallelization. |
-| class [FullTestParallelizationAttribute](./Tennisi.Xunit.v2/FullTestParallelizationAttribute.md) | An assembly-level attribute that enables `parallelizeTestCollections` and `preEnumerateTheories` in the xUnit framework. Alternatively, you can set the `FullTestParallelization` property in your project file. |
-| struct [ParallelTag](./Tennisi.Xunit.v2/ParallelTag.md) | A readonly structure that serves as a `Xunit` fixture to provide unique but constant value for test fact or theory version, facilitating parallel execution of tests while ensuring consistency in tagging. |
 | class [RetryClassAttribute](./Tennisi.Xunit.v2/RetryClassAttribute.md) | Represents a custom xUnit attribute to specify that all test methods in the class (both facts and theories) should be retried a specified number of times. |
 | class [RetryFactAttribute](./Tennisi.Xunit.v2/RetryFactAttribute.md) | Represents a custom xUnit attribute to retry a test a specified number of times. |
 | class [RetryTheoryAttribute](./Tennisi.Xunit.v2/RetryTheoryAttribute.md) | Represents a custom xUnit attribute to retry a theory test a specified number of times. |

@@ -1,10 +1,10 @@
-﻿namespace Tennisi.Xunit.v2;
+﻿namespace Tennisi.Xunit;
 
 internal static class AssemblyInfoExtractor
 {
     private static readonly char[] Separator = { ',' };
 
-    public static string ExtractNameAndVersion(string input)
+    internal static string ExtractNameAndVersion(string input)
     {
         var parts = input.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
         var namePart = string.Empty;

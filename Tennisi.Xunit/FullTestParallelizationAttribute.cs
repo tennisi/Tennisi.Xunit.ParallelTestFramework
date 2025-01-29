@@ -1,4 +1,4 @@
-﻿namespace Tennisi.Xunit.v2;
+﻿namespace Tennisi.Xunit;
 
 /// <summary>
 /// An assembly-level attribute that enables <c>parallelizeTestCollections</c> and <c>preEnumerateTheories</c> in the xUnit framework. 

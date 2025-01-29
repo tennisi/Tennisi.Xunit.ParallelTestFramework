@@ -1,4 +1,4 @@
-﻿namespace Tennisi.Xunit.v2;
+﻿namespace Tennisi.Xunit;
 
 /// <summary>
 /// Assembly-level attribute that disables <c>xunit.discovery.PreEnumerateTheories</c>, <c>xunit.parallelizeTestCollections</c>, <c>xunit.parallelizeAssembly</c>
