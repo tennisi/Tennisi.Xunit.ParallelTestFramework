@@ -1,5 +1,4 @@
-﻿using Xunit.Sdk;
-using Xunit.v3;
+﻿using Xunit.v3;
 
 namespace Tennisi.Xunit.v3;
 

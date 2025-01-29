@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Xunit;
-using Xunit.Internal;
+﻿using Xunit.Internal;
 using Xunit.Sdk;
 using Xunit.v3;
 
