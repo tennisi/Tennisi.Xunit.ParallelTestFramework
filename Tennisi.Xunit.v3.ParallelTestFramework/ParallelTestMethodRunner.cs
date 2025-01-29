@@ -52,6 +52,7 @@ public class ParallelTestMethodRunner : ParallelTestMethodRunnerBase<ParallelTes
     }
 }
 
+/// <inheritdoc />
 public class ParallelTestMethodRunnerBase<TContext, TTestMethod, TTestCase> :
     TestMethodRunner<TContext, TTestMethod, TTestCase>
     where TContext : XunitTestMethodRunnerBaseContext<TTestMethod, TTestCase>
@@ -86,11 +87,6 @@ public class ParallelTestMethodRunnerBase<TContext, TTestMethod, TTestCase> :
             ctxt.ExplicitOption,
             ctxt.ConstructorArguments
         );
-    }
-
-    protected override ValueTask<RunSummary> RunTestCases(TContext ctxt, Exception? exception)
-    {
-        return base.RunTestCases(ctxt, exception);
     }
 }
 

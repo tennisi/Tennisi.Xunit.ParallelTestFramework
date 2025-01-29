@@ -5,6 +5,7 @@ using Xunit.v3;
 
 namespace Tennisi.Xunit.v3;
 
+/// <inheritdoc />
 public class ParallelTestAssemblyRunner :
 	ParallelTestAssemblyRunnerBase<ParallelTestAssemblyRunnerContext, IXunitTestAssembly, IXunitTestCollection, IXunitTestCase>
 {

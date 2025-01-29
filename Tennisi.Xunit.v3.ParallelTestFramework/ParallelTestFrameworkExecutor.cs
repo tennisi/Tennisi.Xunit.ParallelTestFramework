@@ -20,6 +20,7 @@ public class ParallelTestFrameworkExecutor(IXunitTestAssembly testAssembly) :
     protected override ITestFrameworkDiscoverer CreateDiscoverer() =>
         discoverer.Value;
 
+    /// <inheritdoc/>
     public override async ValueTask RunTestCases(IReadOnlyCollection<IXunitTestCase> testCases, IMessageSink executionMessageSink,
         ITestFrameworkExecutionOptions executionOptions)
     {
