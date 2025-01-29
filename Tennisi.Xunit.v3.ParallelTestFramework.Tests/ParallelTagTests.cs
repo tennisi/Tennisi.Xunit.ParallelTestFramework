@@ -31,7 +31,7 @@ public class ParallelTagTests
     [InlineData("p2")]
     public async Task Task1(string p)
     {
-        if (p.ToString(CultureInfo.InvariantCulture) == p.ToLower(CultureInfo.InvariantCulture))
+        if (p.Equals(p, StringComparison.OrdinalIgnoreCase))
         {
             await Test(GetTestMethodName());
         }
