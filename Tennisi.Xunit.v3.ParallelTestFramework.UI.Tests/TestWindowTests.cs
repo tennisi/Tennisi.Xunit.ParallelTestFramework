@@ -4,7 +4,7 @@ namespace Tennisi.Xunit.v3.UIParallelTestFramework.Tests;
 
 public class TestWindowTests
 {
-    const int DelayPerWindowMs = 2000; // 2 seconds per form
+    const int DelayPerWindowMs = 2000; // 2 seconds per form.
     private const int NumberOfForms = 3; // Three forms to simulate parallel execution
     private const double Factor = NumberOfForms * 0.5; // Minimal speedup factor of parallelism
     private const int SerialTime = DelayPerWindowMs * NumberOfForms;
