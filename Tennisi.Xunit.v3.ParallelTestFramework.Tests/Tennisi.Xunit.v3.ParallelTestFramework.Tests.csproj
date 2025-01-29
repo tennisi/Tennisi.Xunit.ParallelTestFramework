@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>Tennisi.v3.Tests</RootNamespace>
+        <OutputType>exe</OutputType>
+        <NoWarn>$(NoWarn);CA1812;CA1062;CA1852;CA1308</NoWarn>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <FullTestParallelization>true</FullTestParallelization>
+    </PropertyGroup>
+
+    <ImportGroup>
+        <Import Project="../Tennisi.Xunit.v3.ParallelTestFramework/build/Tennisi.Xunit.v3.ParallelTestFramework.props" />
+    </ImportGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+        <PackageReference Include="xunit.v3" Version="1.0.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+
+        <None Update="xunit.runner.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    
+</Project>
