@@ -6,7 +6,7 @@ using Xunit.v3;
 namespace Tennisi.Xunit.v3;
 
 /// <inheritdoc />
-internal class ParallelTestFrameworkExecutor(IXunitTestAssembly testAssembly) :
+public class ParallelTestFrameworkExecutor(IXunitTestAssembly testAssembly) :
     TestFrameworkExecutor<IXunitTestCase>(testAssembly)
 {
     readonly Lazy<ParallelTestFrameworkDiscoverer> discoverer = new(() => new(testAssembly));

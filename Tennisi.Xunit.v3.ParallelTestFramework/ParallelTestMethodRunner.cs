@@ -69,6 +69,12 @@ public class ParallelTestMethodRunnerBase<TContext, TTestMethod, TTestCase> :
         Guard.ArgumentNotNull(ctxt);
         Guard.ArgumentNotNull(testCase);
 
+        var parallelTag = ParallelTag.FromTestCase(ctxt.ConstructorArguments, testCase);
+        if (parallelTag != null)
+        {
+            ParallelTag.Inject(ref parallelTag, ctxt.ConstructorArguments);
+        }   
+
         if (testCase is ISelfExecutingXunitTestCase selfExecutingTestCase)
             return selfExecutingTestCase.Run(ctxt.ExplicitOption, ctxt.MessageBus, ctxt.ConstructorArguments, ctxt.Aggregator.Clone(), ctxt.CancellationTokenSource);
 

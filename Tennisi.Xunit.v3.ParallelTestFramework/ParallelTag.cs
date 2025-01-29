@@ -53,7 +53,7 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
         return null;
     }
 
-    internal static void Inject(ref ParallelTag? tag, ref object?[] args)
+    internal static void Inject(ref ParallelTag? tag, object?[] args)
     {
         if (tag == null)
             throw new InvalidOperationException(nameof(ParallelTag));

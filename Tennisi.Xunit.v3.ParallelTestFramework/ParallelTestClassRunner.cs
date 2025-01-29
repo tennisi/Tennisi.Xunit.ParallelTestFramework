@@ -84,4 +84,48 @@ internal class ParallelTestClassRunner : XunitTestClassRunnerBase<ParallelTestCl
 					constructorArguments
 				);
 	}
+
+	protected override async ValueTask<object?[]> CreateTestClassConstructorArguments(ParallelTestClassRunnerContext ctxt)
+	{
+		Guard.ArgumentNotNull(ctxt);
+
+		if (!ctxt.Aggregator.HasExceptions)
+		{
+			var ctor = SelectTestClassConstructor(ctxt);
+			if (ctor is not null)
+			{
+				var unusedArguments = new List<Tuple<int, ParameterInfo>>();
+				var parameters = ctor.GetParameters();
+
+				var constructorArguments = new object?[parameters.Length];
+				for (var idx = 0; idx < parameters.Length; ++idx)
+				{
+					var parameter = parameters[idx];
+
+					var argumentValue = await GetConstructorArgument(ctxt, ctor, idx, parameter);
+					if (parameter.ParameterType == typeof(ParallelTag))
+					{
+						constructorArguments[idx] = new ParallelTag();
+					}
+					else if (argumentValue is not null)
+						constructorArguments[idx] = argumentValue;
+					else if (parameter.HasDefaultValue)
+						constructorArguments[idx] = parameter.DefaultValue;
+					else if (parameter.IsOptional)
+						constructorArguments[idx] = parameter.ParameterType.GetDefaultValue();
+					else if (parameter.GetCustomAttribute<ParamArrayAttribute>() is not null)
+						constructorArguments[idx] = Array.CreateInstance(parameter.ParameterType, 0);
+					else
+						unusedArguments.Add(Tuple.Create(idx, parameter));
+				}
+
+				if (unusedArguments.Count > 0)
+					ctxt.Aggregator.Add(new TestPipelineException(FormatConstructorArgsMissingMessage(ctxt, ctor, unusedArguments)));
+
+				return constructorArguments;
+			}
+		}
+
+		return [];
+	}
 }
