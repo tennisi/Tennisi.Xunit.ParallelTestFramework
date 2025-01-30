@@ -1,1 +1,1 @@
-dotnet test -- --xunit-diagnostics on
+dotnet test -- --seed 123 --xunit-diagnostics on

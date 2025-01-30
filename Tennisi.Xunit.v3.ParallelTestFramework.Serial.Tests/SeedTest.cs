@@ -16,7 +16,7 @@ internal static class SeedClass
 
     public static async Task Seed(string clx, int number)
     {
-        await Task.Delay(100);
+        await Task.Delay(10);
 
         lock (locker)
         {
@@ -29,6 +29,11 @@ internal static class SeedClass
 
 public class SeedTest1
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+    public SeedTest1(ITestOutputHelper output)
+    {
+        _testOutputHelper = output;
+    }
     [Fact]
     public void Run()
     {
@@ -39,6 +44,7 @@ public class SeedTest1
     public async Task Run1()
     {
         await SeedClass.Seed("A", 1);
+        _testOutputHelper.WriteLine("Seed: A");
         Assert.True(true);
     }
 

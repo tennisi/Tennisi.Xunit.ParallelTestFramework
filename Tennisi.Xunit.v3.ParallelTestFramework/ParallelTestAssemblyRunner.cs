@@ -37,6 +37,12 @@ public class ParallelTestAssemblyRunner :
 		Guard.ArgumentNotNull(testCases);
 		Guard.ArgumentNotNull(executionMessageSink);
 		Guard.ArgumentNotNull(executionOptions);
+		
+		ParallelSettings.RefineParallelSetting(testAssembly.AssemblyName, executionOptions);
+
+		var runner = ParallelSettings.GetRunner(testAssembly.AssemblyName);
+		var seed = Randomizer.Seed;
+		executionMessageSink.OnMessage(new DiagnosticMessage($"The test assembly seed: {seed}, runner: {runner}"));
 
 		await using var ctxt = new ParallelTestAssemblyRunnerContext(testAssembly, testCases, executionMessageSink, executionOptions);
 		await ctxt.InitializeAsync();

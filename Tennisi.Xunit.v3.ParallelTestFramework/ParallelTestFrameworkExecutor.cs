@@ -21,7 +21,6 @@ public class ParallelTestFrameworkExecutor(IXunitTestAssembly testAssembly) :
     public override async ValueTask RunTestCases(IReadOnlyCollection<IXunitTestCase> testCases, IMessageSink executionMessageSink,
         ITestFrameworkExecutionOptions executionOptions)
     {
-        ParallelSettings.RefineParallelSetting(TestAssembly.AssemblyName, executionOptions);
         await ParallelTestAssemblyRunner.Instance.Run(TestAssembly, testCases, executionMessageSink, executionOptions);
     }
 }
