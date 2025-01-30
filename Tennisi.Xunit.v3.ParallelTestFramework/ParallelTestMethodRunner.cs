@@ -2,7 +2,7 @@
 using Xunit.Sdk;
 using Xunit.v3;
 
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// The test method runner for xUnit.net v3 tests.

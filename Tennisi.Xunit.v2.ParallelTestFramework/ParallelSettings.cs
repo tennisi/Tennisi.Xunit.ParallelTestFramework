@@ -2,7 +2,7 @@
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 internal static class ParallelSettings
 {

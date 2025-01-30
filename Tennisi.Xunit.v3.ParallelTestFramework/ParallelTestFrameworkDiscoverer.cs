@@ -1,6 +1,6 @@
 ﻿using Xunit.v3;
 
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <inheritdoc />
 public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer

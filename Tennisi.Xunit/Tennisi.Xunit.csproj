@@ -4,8 +4,8 @@
         <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
         <Description>Run xUnit test cases in parallel</Description>
-        <IsPackable>True</IsPackable>
         <RootNamespace>Tennisi.Xunit</RootNamespace>
         <NoWarn>$(NoWarn);CA1812</NoWarn>
     </PropertyGroup>

@@ -1,7 +1,7 @@
 ﻿<Project>
     <ItemGroup>
         <AssemblyAttribute Include="Xunit.TestFramework">
-            <_Parameter1>typeof(Tennisi.Xunit.v3.ParallelTestFramework)</_Parameter1>
+            <_Parameter1>typeof(Tennisi.Xunit.ParallelTestFramework)</_Parameter1>
             <_Parameter1_IsLiteral>true</_Parameter1_IsLiteral>
         </AssemblyAttribute>
     </ItemGroup>

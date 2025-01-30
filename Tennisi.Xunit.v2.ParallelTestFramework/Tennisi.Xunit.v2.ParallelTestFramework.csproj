@@ -7,7 +7,7 @@
     <Description>Run xUnit test cases in parallel</Description>
     <IsPackable>True</IsPackable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RootNamespace>Tennisi.Xunit.v2</RootNamespace>
+    <RootNamespace>Tennisi.Xunit</RootNamespace>
     <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
 
@@ -19,7 +19,27 @@
     <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net7.0\" />
     <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0\" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj"  PrivateAssets="all"
+                      Pack="true"  />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'All'))"/>
+    </ItemGroup>
+    <Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" Condition="'@(_ReferenceCopyLocalPaths)' != ''" />
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)"/>
+    </ItemGroup>
+  </Target>
+
+
   <ItemGroup>
     <PackageReference Include="xunit.extensibility.execution" Version="2.9.2" />
   </ItemGroup>
@@ -31,7 +51,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj" />
+    <ProjectReference Version="*" PrivateAssets="all" Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj"/>
   </ItemGroup>
   
 </Project>

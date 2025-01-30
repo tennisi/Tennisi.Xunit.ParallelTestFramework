@@ -7,7 +7,7 @@
         <Description>Run xUnit test cases in parallel</Description>
         <IsPackable>True</IsPackable>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Tennisi.Xunit.v3</RootNamespace>
+        <RootNamespace>Tennisi.Xunit</RootNamespace>
         <NoWarn>$(NoWarn);CA1812;CA1416;CA1852</NoWarn>
     </PropertyGroup>
     
@@ -25,12 +25,17 @@
         <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />
     </ItemGroup>
 
+
     <ItemGroup>
-        <ProjectReference Include="..\Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj">
+        <ProjectReference Pack="true" Include="..\Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj">
             <IncludeAssets>runtime; build</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </ProjectReference>
-        <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj"  PrivateAssets="all"
+                          Pack="true"  />
     </ItemGroup>
 
     <PropertyGroup>
@@ -46,6 +51,7 @@
             <BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)"/>
         </ItemGroup>
     </Target>
+
 
     <ItemGroup>
         <None Include="$(MSBuildProjectDirectory)/../README.md" Pack="true" PackagePath="" />

@@ -1,7 +1,7 @@
 ﻿using Xunit.Sdk;
 using Xunit.v3;
 
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// Context class for <see cref="XunitTestMethodRunner"/>.

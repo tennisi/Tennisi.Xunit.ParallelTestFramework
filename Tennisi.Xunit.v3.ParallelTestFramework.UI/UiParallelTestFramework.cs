@@ -1,4 +1,4 @@
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// A custom implementation of the xUnit test framework tailored for GUI applications.

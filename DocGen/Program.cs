@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
-using Tennisi.Xunit.v2;
 using XmlDocMarkdown.Core;
 
 namespace DocGen;
@@ -14,14 +12,14 @@ internal static class Program
         get
         {
             var dir = Directory.GetCurrentDirectory();
-            while (!File.Exists(Path.Combine(dir, $"{Libraries.First()}.sln")))
+            while (!File.Exists(Path.Combine(dir, $"{"Tennisi.Xunit.v2.ParallelTestFramework"}.sln")))
                 dir = Path.GetFullPath(Path.Combine(dir, ".."));
             return dir;
         }
     }
     private static string SourceDir => Path.Combine(OutputDir, $"{Libraries.First()}");
     private static string FooterFile => Path.Combine(OutputDir, $"DocGen/footer.md");
-    private static string Library => "Tennisi.Xunit.v2.ParallelTestFramework";
+    private static string Library => "Tennisi.Xunit";
     private static readonly string[] Libraries = {Library};
     private static readonly string[] ArgsArray = Libraries.Union(new[]
     {

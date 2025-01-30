@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using Xunit.Sdk;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// Represents a custom xUnit attribute to retry a test a specified number of times.
@@ -19,7 +19,7 @@ namespace Tennisi.Xunit.v2;
 /// }
 /// </code>
 /// </example>
-[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryFactDiscoverer", "Tennisi.Xunit")]
+[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryFactDiscoverer", "Tennisi.Xunit.v2.ParallelTestFramework")]
 public sealed class RetryFactAttribute : FactAttribute
 {
     /// <summary>

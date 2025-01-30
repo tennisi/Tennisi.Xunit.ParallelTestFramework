@@ -3,7 +3,7 @@ using Xunit.Internal;
 using Xunit.Sdk;
 using Xunit.v3;
 
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <inheritdoc />
 public class ParallelTestAssemblyRunner :
@@ -57,7 +57,7 @@ public class ParallelTestAssemblyRunnerBase<TContext, TTestAssembly, TTestCollec
 {
 	/// <inheritdoc/>
 	protected override ValueTask<string> GetTestFrameworkDisplayName(TContext ctxt) =>
-		new(nameof(Tennisi.Xunit.v3.ParallelTestFramework));
+		new(nameof(Tennisi.Xunit.ParallelTestFramework));
 
 	/// <inheritdoc/>
 	protected override async ValueTask<bool> OnTestAssemblyFinished(

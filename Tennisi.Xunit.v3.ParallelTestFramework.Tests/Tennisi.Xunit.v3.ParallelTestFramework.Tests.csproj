@@ -20,6 +20,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj" />
+        <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj" />
     </ItemGroup>
 
     <ItemGroup>

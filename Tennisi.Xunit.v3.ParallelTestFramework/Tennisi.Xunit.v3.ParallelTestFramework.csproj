@@ -7,7 +7,7 @@
         <Description>Run xUnit.v3 test cases in parallel</Description>
         <IsPackable>True</IsPackable>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Tennisi.Xunit.v3</RootNamespace>
+        <RootNamespace>Tennisi.Xunit</RootNamespace>
         <NoWarn>$(NoWarn);CA1812;CA1062;CA1852;CA1308</NoWarn>
         <LangVersion>12.0</LangVersion>
     </PropertyGroup>
@@ -21,7 +21,25 @@
         <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0\" />
     </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj"  PrivateAssets="all"
+                      Pack="true"  />
+  </ItemGroup>
 
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <ItemGroup>
+      <_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'All'))"/>
+    </ItemGroup>
+    <Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" Condition="'@(_ReferenceCopyLocalPaths)' != ''" />
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)"/>
+    </ItemGroup>
+  </Target>
+             
 
     <ItemGroup>
         <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />

@@ -3,7 +3,7 @@ using Xunit.Internal;
 using Xunit.Sdk;
 using Xunit.v3;
 
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <inheritdoc />
 internal class ParallelTestClassRunner : XunitTestClassRunnerBase<ParallelTestClassRunnerContext, IXunitTestClass,

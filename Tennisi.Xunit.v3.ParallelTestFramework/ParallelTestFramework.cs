@@ -3,7 +3,7 @@ using System.Reflection;
 using Xunit.Internal;
 using Xunit.v3;
 
-namespace Tennisi.Xunit.v3;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// A custom implementation of the xUnit.v3 test framework designed to maximize parallelism.
