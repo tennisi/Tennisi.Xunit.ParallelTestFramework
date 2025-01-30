@@ -49,8 +49,12 @@ jobs:
       - name: Get latest tag
         id: get_tag
         run: |
-          $tag = git describe --tags --abbrev=0 2>$null || ""
-          echo "TAG=$tag" >> $env:GITHUB_ENV
+          try {
+          $tag = git describe --tags --abbrev=0 2>$null
+          } catch {
+            $tag = ""
+          }
+          echo "TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         shell: pwsh
 
       - name: Determine version
@@ -145,6 +149,9 @@ jobs:
       - name: Pack and Push
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         run: |
-          dotnet pack ./Tennisi.Xunit.v2.ParallelTestFramework/Tennisi.Xunit.v2.ParallelTestFramework.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
-          $nupkgFile = "./Tennisi.Xunit.v2.ParallelTestFramework/Tennisi.Xunit.v2.ParallelTestFramework.${{ env.VERSION }}.nupkg"
-          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}.NUGET_API_KEY6 }}
+          if ($env:VERSION -match '\d+\.\d+\.\d+')
+          {
+            dotnet pack ./Tennisi.Xunit.v2.ParallelTestFramework/Tennisi.Xunit.v2.ParallelTestFramework.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
+            $nupkgFile = "./Tennisi.Xunit.v2.ParallelTestFramework/Tennisi.Xunit.v2.ParallelTestFramework.${{ env.VERSION }}.nupkg"
+            dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}.NUGET_API_KEY6 }}
+          }
