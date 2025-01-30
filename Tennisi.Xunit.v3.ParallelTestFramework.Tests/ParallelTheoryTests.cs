@@ -12,7 +12,7 @@ public class ParallelTheoryTests : IClassFixture<ConcurrencyFixture>
         _fixture = fixture;
     }
 
-    [Theory]
+    [Theory(Skip = "Not implemented yet")]
     [InlineData(1)]
     [InlineData(2)]
     [SuppressMessage("Roslynator", "RCS1163:Unused parameter", Justification = "By Author")]

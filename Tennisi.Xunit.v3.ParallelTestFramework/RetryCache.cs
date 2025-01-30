@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Runtime.InteropServices.ComTypes;
-using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
@@ -9,7 +8,7 @@ internal static class RetryCache
 {
     private static readonly ConcurrentDictionary<(ITestMethod Method, ITypeInfo Class), RetryEntry> Cache = new();
 
-    internal static bool ShouldUseClassRetry(this ITestMethod testMethod, out int retryCount)
+    /*internal static bool ShouldUseClassRetry(this ITestMethod testMethod, out int retryCount)
     {
         var entry = Cache.GetOrAdd((testMethod, testMethod.TestClass.Class), tuple =>
         {
@@ -31,7 +30,7 @@ internal static class RetryCache
         
         retryCount = entry.RetryCount;
         return entry.HasRetry;
-    }
+    }*/
 
     private readonly struct RetryEntry
     {

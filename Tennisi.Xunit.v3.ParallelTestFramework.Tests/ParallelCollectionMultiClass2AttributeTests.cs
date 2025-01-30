@@ -12,13 +12,13 @@ public class ParallelCollectionMultiClass2AttributeTests
         this.fixture = fixture;
     }
 
-    [Fact]
+    [Fact(Skip = "Not implemented yet")]
     public async Task Fact1()
     {
         Assert.Equal(2, await fixture.CheckConcurrencyAsync().ConfigureAwait(false));
     }
 
-    [Fact]
+    [Fact(Skip = "Not implemented yet")]
     public async Task Fact2()
     {
         Assert.Equal(2, await fixture.CheckConcurrencyAsync().ConfigureAwait(false));

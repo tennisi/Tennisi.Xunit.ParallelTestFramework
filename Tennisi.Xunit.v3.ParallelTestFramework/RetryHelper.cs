@@ -1,4 +1,4 @@
-﻿using Xunit.Abstractions;
+﻿using Xunit.Sdk;
 
 namespace Tennisi.Xunit;
 
@@ -8,20 +8,20 @@ internal static class RetryHelper
     private const int MaxRetryCount = 10;
     private const string RetryCountName = nameof(RetryTheoryAttribute.RetryCount); 
     
-    internal static int GetRetryCount(this IAttributeInfo attributeInfo)
-    {
-        return attributeInfo.GetNamedArgument<int>(RetryCountName);
-    }
+    // internal static int GetRetryCount(this IAttributeInfo attributeInfo)
+    // {
+    //     return attributeInfo.GetNamedArgument<int>(RetryCountName);
+    // }
     
     internal static bool IsDefaultRetryCount(this int value)
     {
         return value == DefaultRetryCount;
     }
     
-    internal static int GetRetryCountOrDefault(this IAttributeInfo? attributeInfo)
-    {
-        return attributeInfo?.GetRetryCount() ?? DefaultRetryCount;
-    }
+    // internal static int GetRetryCountOrDefault(this IAttributeInfo? attributeInfo)
+    // {
+    //     return attributeInfo?.GetRetryCount() ?? DefaultRetryCount;
+    // }
 
     internal static void AddRetryCount(this IXunitSerializationInfo serializationInfo, int retryCount)
     {

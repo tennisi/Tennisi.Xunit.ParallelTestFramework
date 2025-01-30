@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using Xunit.Sdk;
+using Xunit.v3;
 
 namespace Tennisi.Xunit;
 
@@ -21,7 +22,7 @@ namespace Tennisi.Xunit;
 /// }
 /// </code>
 /// </example>
-[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryTheoryDiscoverer", "Tennisi.Xunit.v2.ParallelTestFramework")]
+[XunitTestCaseDiscoverer(typeof(RetryTheoryDiscoverer))]
 public sealed class RetryTheoryAttribute : TheoryAttribute
 {
     /// <summary>
