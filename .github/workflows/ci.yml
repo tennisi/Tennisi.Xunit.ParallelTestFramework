@@ -7,10 +7,6 @@ on:
       - feature/*
     tags:
       - '*'
-  pull_request:
-    branches:
-      - main
-      - feature/*
     
 jobs:
   build-windows-v3:
