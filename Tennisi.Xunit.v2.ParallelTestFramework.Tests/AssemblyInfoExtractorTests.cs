@@ -26,7 +26,7 @@ public class AssemblyInfoExtractorTests
         Assert.NotNull(type); // Ensure the type exists
 
         // Get the ExtractNameAndVersion method
-        var method = type.GetMethod("ExtractNameAndVersion", BindingFlags.Public | BindingFlags.Static);
+        var method = type.GetMethod("ExtractNameAndVersion", BindingFlags.NonPublic | BindingFlags.Static);
         Assert.NotNull(method); // Ensure the method exists
 
         // Invoke the method using reflection
