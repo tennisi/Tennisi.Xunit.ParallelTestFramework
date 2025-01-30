@@ -33,6 +33,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Tennisi.Xunit.v2.ParallelTestFramework.UI\Tennisi.Xunit.v2.ParallelTestFramework.UI.csproj" />
       <ProjectReference Include="..\Tennisi.Xunit.v2.ParallelTestFramework\Tennisi.Xunit.v2.ParallelTestFramework.csproj" />
+      <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -7,10 +7,6 @@ on:
       - feature/*
     tags:
       - '*'
-  pull_request:
-    branches:
-      - main
-      - feature/*
     
 jobs:
   build-windows:
@@ -43,17 +39,6 @@ jobs:
           dotnet restore Tennisi.Xunit.v2.ParallelTestFramework.UI.sln
         shell: pwsh
 
-      - name: Build
-        run: |
-          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln /property:Configuration=Release --no-restore
-        shell: pwsh
-
-      - name: Run tests
-        run: |
-          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --configuration Debug
-          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --no-build --verbosity normal
-        shell: pwsh
-
       - name: Get MinVer version
         id: get_version
         run: |
@@ -64,8 +49,12 @@ jobs:
       - name: Get latest tag
         id: get_tag
         run: |
-          $tag = git describe --tags --abbrev=0 2>$null || ""
-          echo "TAG=$tag" >> $env:GITHUB_ENV
+          try {
+          $tag = git describe --tags --abbrev=0 2>$null
+          } catch {
+            $tag = ""
+          }
+          echo "TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         shell: pwsh
 
       - name: Determine version
@@ -79,13 +68,24 @@ jobs:
           echo "VERSION=$version" >> $env:GITHUB_ENV
         shell: pwsh
 
+      - name: Build
+        run: |
+          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln /property:Configuration=Release --no-restore
+        shell: pwsh
+
+      - name: Run tests
+        run: |
+          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --configuration Debug
+          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --no-build --verbosity normal
+        shell: pwsh
+
       - name: Pack and Push
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         run: |
           dotnet pack ./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
           $nupkgFile = "./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.${{ env.VERSION }}.nupkg"
-          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY6 }}
+          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}
                        
   build-ubuntu:
     runs-on: ubuntu-24.04
@@ -113,14 +113,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Tennisi.Xunit.v2.ParallelTestFramework.sln
 
-      - name: Build
-        run: dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln /property:Configuration=Release --no-restore
-
-      - name: Run tests
-        run: |
-          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln --configuration Debug
-          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.sln --no-build --verbosity normal
-
       - name: Get MinVer version
         id: get_version
         run: |
@@ -143,8 +135,16 @@ jobs:
           fi
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
+      - name: Build
+        run: dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln /property:Configuration=Release --no-restore
+
+      - name: Run tests
+        run: |
+          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln --configuration Debug
+          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.sln --no-build --verbosity normal
+
       - name: Pack and Push
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         run: |
           dotnet pack Tennisi.Xunit.v2.ParallelTestFramework.sln -c Release /p:Version=${{ env.VERSION }}
-          dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY6 }}
+          dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}

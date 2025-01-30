@@ -3,7 +3,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <inheritdoc />
 internal class ParallelTestClassRunner : XunitTestClassRunner
