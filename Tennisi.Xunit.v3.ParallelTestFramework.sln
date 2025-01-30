@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v3.ParallelTestFramework", "Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj", "{DDB7CAF1-1CD6-49D8-A655-9191C66A46D0}"
+EndProject
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v3.ParallelTestFramework.Tests", "Tennisi.Xunit.v3.ParallelTestFramework.Tests\Tennisi.Xunit.v3.ParallelTestFramework.Tests.csproj", "{E49C7A1F-26FB-4155-B156-3404C868F54D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{1F2D02AD-6CEE-4AA3-A4F8-E6712C78C964}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit", "Tennisi.Xunit\Tennisi.Xunit.csproj", "{68AA3DBB-8319-4532-A261-61B2610EF316}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDB7CAF1-1CD6-49D8-A655-9191C66A46D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDB7CAF1-1CD6-49D8-A655-9191C66A46D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDB7CAF1-1CD6-49D8-A655-9191C66A46D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDB7CAF1-1CD6-49D8-A655-9191C66A46D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

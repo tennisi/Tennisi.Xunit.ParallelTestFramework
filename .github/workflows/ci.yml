@@ -9,6 +9,145 @@ on:
       - '*'
     
 jobs:
+  build-windows-version3:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.410'
+
+      - name: Setup .NET8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.404'
+
+      - name: Initialize .NET tool manifest
+        run: |
+          dotnet new tool-manifest || $true
+        shell: pwsh
+
+      - name: Install MinVer CLI locally
+        run: dotnet tool install minver-cli --version 5.0.0
+        shell: pwsh
+
+      - name: Restore dependencies
+        run: |
+          dotnet restore Tennisi.Xunit.v3.ParallelTestFramework.UI.sln
+        shell: pwsh
+
+      - name: Get MinVer version
+        id: get_version
+        run: |
+          $version = dotnet minver
+          echo "MINVER_VERSION=$version" >> $env:GITHUB_ENV
+        shell: pwsh
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          try {
+          $tag = git describe --tags --abbrev=0 2>$null
+          } catch {
+            $tag = ""
+          }
+          echo "TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        shell: pwsh
+
+      - name: Determine version
+        id: determine_version
+        run: |
+          if ($env:GITHUB_REF -eq "refs/heads/main") {
+            $version = $env:TAG
+          } else {
+            $version = $env:MINVER_VERSION
+          }
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+        shell: pwsh
+
+      - name: Build
+        run: |
+          dotnet build Tennisi.Xunit.v3.ParallelTestFramework.UI.sln /property:Configuration=Release --no-restore
+        shell: pwsh
+
+      - name: Run tests
+        run: |
+          dotnet build Tennisi.Xunit.v3.ParallelTestFramework.UI.sln --configuration Debug
+          dotnet test Tennisi.Xunit.v3.ParallelTestFramework.UI.sln --no-build --verbosity normal
+        shell: pwsh
+
+      - name: Pack and Push
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          dotnet pack ./Tennisi.Xunit.v3.ParallelTestFramework.UI/Tennisi.Xunit.v3.ParallelTestFramework.UI.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
+          $nupkgFile = "./Tennisi.Xunit.v3.ParallelTestFramework.UI/Tennisi.Xunit.v3.ParallelTestFramework.UI.${{ env.VERSION }}.nupkg"
+          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}
+
+  build-ubuntu-version3:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.410'
+
+      - name: Setup .NET8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.404'
+
+      - name: Initialize .NET tool manifest
+        run: |
+          dotnet new tool-manifest || true
+
+      - name: Install minver-cli locally
+        run: dotnet tool install minver-cli --version 5.0.0
+
+      - name: Restore dependencies
+        run: dotnet restore Tennisi.Xunit.v3.ParallelTestFramework.sln
+
+      - name: Get MinVer version
+        id: get_version
+        run: |
+          MINVER_VERSION=$(dotnet minver)
+          echo "MINVER_VERSION=${MINVER_VERSION}" >> $GITHUB_ENV
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+
+      - name: Determine version
+        id: determine_version
+        run: |
+          if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+            VERSION=${{ env.TAG }}
+          else
+            VERSION=${{ env.MINVER_VERSION }}
+          fi
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Build
+        run: dotnet build Tennisi.Xunit.v3.ParallelTestFramework.sln /property:Configuration=Release --no-restore
+
+      - name: Run tests
+        run: |
+          dotnet build Tennisi.Xunit.v3.ParallelTestFramework.sln --configuration Debug
+          dotnet test Tennisi.Xunit.v3.ParallelTestFramework.sln --no-build --verbosity normal
+
+      - name: Pack and Push
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+        run: |
+          dotnet pack Tennisi.Xunit.v3.ParallelTestFramework.sln -c Release /p:Version=${{ env.VERSION }}
+          dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}
   build-windows:
     runs-on: windows-2022
     steps:

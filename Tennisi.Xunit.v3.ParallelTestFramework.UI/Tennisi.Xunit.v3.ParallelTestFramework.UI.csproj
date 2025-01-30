@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net7.0-windows;net8.0-windows</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Description>Run xUnit test cases in parallel</Description>
+        <IsPackable>True</IsPackable>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RootNamespace>Tennisi.Xunit</RootNamespace>
+        <NoWarn>$(NoWarn);CA1812;CA1416;CA1852</NoWarn>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net7.0-windows\" />
+        <None Update="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0-windows\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+        <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Pack="true" Include="..\Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj">
+            <IncludeAssets>runtime; build</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj"  PrivateAssets="all"
+                          Pack="true"  />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    </PropertyGroup>
+
+    <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+        <ItemGroup>
+            <_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')->WithMetadataValue('PrivateAssets', 'All'))"/>
+        </ItemGroup>
+        <Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" Condition="'@(_ReferenceCopyLocalPaths)' != ''" />
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)"/>
+        </ItemGroup>
+    </Target>
+
+
+    <ItemGroup>
+        <None Include="$(MSBuildProjectDirectory)/../README.md" Pack="true" PackagePath="" />
+        <None Include="build/**/*.props" Pack="true" PackagePath="build" />
+        <None Include="buildMultiTargeting/**/*.props" Pack="true" PackagePath="buildMultiTargeting" />
+    </ItemGroup>
+</Project>
