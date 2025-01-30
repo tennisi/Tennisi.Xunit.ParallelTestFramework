@@ -19,7 +19,7 @@ namespace Tennisi.Xunit;
 /// }
 /// </code>
 /// </example>
-[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryFactDiscoverer", "Tennisi.Xunit")]
+[XunitTestCaseDiscoverer("Tennisi.Xunit.RetryFactDiscoverer", "Tennisi.Xunit.v2.ParallelTestFramework")]
 public sealed class RetryFactAttribute : FactAttribute
 {
     /// <summary>

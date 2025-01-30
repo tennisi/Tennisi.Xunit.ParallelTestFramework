@@ -1,7 +1,7 @@
 ﻿<Project>
   <ItemGroup>
     <AssemblyAttribute Include="Xunit.TestFramework">
-      <_Parameter1>Tennisi.Xunit.v2.ParallelTestFramework</_Parameter1>
+      <_Parameter1>Tennisi.Xunit.ParallelTestFramework</_Parameter1>
       <_Parameter2>Tennisi.Xunit.v2.ParallelTestFramework</_Parameter2>
     </AssemblyAttribute>
   </ItemGroup>
