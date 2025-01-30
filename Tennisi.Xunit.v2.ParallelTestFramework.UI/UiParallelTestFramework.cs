@@ -1,7 +1,7 @@
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// A custom implementation of the xUnit test framework tailored for GUI applications.

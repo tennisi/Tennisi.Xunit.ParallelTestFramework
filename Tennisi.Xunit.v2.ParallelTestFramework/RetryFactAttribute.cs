@@ -1,7 +1,7 @@
 ﻿using Xunit;
 using Xunit.Sdk;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// Represents a custom xUnit attribute to retry a test a specified number of times.

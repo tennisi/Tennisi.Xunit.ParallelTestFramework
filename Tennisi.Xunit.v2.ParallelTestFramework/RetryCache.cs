@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Xunit.Abstractions;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 internal static class RetryCache
 {

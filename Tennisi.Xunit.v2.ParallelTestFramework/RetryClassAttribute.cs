@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// Represents a custom xUnit attribute to specify that all test methods 
