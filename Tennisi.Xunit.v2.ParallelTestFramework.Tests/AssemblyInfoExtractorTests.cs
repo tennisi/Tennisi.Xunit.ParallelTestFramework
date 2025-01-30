@@ -22,7 +22,7 @@ public class AssemblyInfoExtractorTests
     {
         // Use reflection to find the AssemblyInfoExtractor class
         var assembly = typeof(ParallelTag).Assembly;
-        var type = assembly.GetType("Tennisi.Xunit.v2.AssemblyInfoExtractor");
+        var type = assembly.GetType("Tennisi.Xunit.AssemblyInfoExtractor");
         Assert.NotNull(type); // Ensure the type exists
 
         // Get the ExtractNameAndVersion method

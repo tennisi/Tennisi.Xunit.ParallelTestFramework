@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit", "Tennisi.Xunit\Tennisi.Xunit.csproj", "{68AA3DBB-8319-4532-A261-61B2610EF316}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +27,9 @@ Global
 		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E49C7A1F-26FB-4155-B156-3404C868F54D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68AA3DBB-8319-4532-A261-61B2610EF316}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -30,6 +30,7 @@
             <IncludeAssets>runtime; build</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </ProjectReference>
+        <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

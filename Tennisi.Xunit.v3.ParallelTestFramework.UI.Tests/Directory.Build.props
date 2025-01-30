@@ -1,10 +1,10 @@
 ﻿<Project>
     <ItemGroup Condition="'$(FullTestParallelization)' == 'true'">
-        <AssemblyAttribute Include="Tennisi.Xunit.v3.FullTestParallelizationAttribute">
+        <AssemblyAttribute Include="Tennisi.Xunit.FullTestParallelizationAttribute">
         </AssemblyAttribute>
     </ItemGroup>
     <ItemGroup Condition="'$(DisableTestParallelization)' == 'true'">
-        <AssemblyAttribute Include="Tennisi.Xunit.v3.DisableTestParallelizationAttribute">
+        <AssemblyAttribute Include="Tennisi.Xunit.DisableTestParallelizationAttribute">
         </AssemblyAttribute>
     </ItemGroup>
 </Project>

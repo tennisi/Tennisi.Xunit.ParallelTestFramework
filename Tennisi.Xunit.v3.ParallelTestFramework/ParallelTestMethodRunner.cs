@@ -68,7 +68,7 @@ public class ParallelTestMethodRunnerBase<TContext, TTestMethod, TTestCase> :
         Guard.ArgumentNotNull(ctxt);
         Guard.ArgumentNotNull(testCase);
 
-        var parallelTag = ParallelTag.FromTestCase(ctxt.ConstructorArguments, testCase);
+        var parallelTag = ParallelTag.FromTestCase(ctxt.ConstructorArguments, testCase.UniqueID);
         if (parallelTag != null)
         {
             ParallelTag.Inject(ref parallelTag, ctxt.ConstructorArguments);

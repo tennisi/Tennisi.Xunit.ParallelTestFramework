@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
+using Tennisi.Xunit;
 using Tennisi.Xunit.v3;
 using Xunit;
 

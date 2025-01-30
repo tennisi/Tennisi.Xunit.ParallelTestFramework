@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v3.ParallelTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v3.ParallelTestFramework", "Tennisi.Xunit.v3.ParallelTestFramework\Tennisi.Xunit.v3.ParallelTestFramework.csproj", "{40420EFB-743D-4301-9838-08A8F31D2218}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit", "Tennisi.Xunit\Tennisi.Xunit.csproj", "{A728A140-3ABD-4DC7-9AF7-8CE6FC63B5A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{40420EFB-743D-4301-9838-08A8F31D2218}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40420EFB-743D-4301-9838-08A8F31D2218}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40420EFB-743D-4301-9838-08A8F31D2218}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A728A140-3ABD-4DC7-9AF7-8CE6FC63B5A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A728A140-3ABD-4DC7-9AF7-8CE6FC63B5A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A728A140-3ABD-4DC7-9AF7-8CE6FC63B5A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A728A140-3ABD-4DC7-9AF7-8CE6FC63B5A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
