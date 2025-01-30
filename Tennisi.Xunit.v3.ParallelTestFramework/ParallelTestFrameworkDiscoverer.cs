@@ -17,6 +17,7 @@ public class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
         _testAssembly = testAssembly;
     }
 
+    /// <inheritdoc />
     protected override ValueTask<bool> FindTestsForType(IXunitTestClass testClass, ITestFrameworkDiscoveryOptions discoveryOptions,
         Func<ITestCase, ValueTask<bool>> discoveryCallback)
     {
