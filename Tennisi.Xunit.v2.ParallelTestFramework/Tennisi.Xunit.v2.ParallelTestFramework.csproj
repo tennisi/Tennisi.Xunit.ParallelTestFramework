@@ -30,4 +30,8 @@
     <None Include="buildMultiTargeting/**/*.props" Pack="true" PackagePath="buildMultiTargeting" />
   </ItemGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj" />
+  </ItemGroup>
+  
 </Project>

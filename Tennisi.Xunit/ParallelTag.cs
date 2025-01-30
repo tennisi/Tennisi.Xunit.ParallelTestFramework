@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Tennisi.Xunit.v2;
+namespace Tennisi.Xunit;
 
 /// <summary>
 /// A readonly structure that serves as a <c>Xunit</c> fixture to provide unique but constant value for test fact or theory version,

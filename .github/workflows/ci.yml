@@ -85,7 +85,7 @@ jobs:
         run: |
           dotnet pack ./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
           $nupkgFile = "./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.${{ env.VERSION }}.nupkg"
-          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY3 }}
+          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY6 }}
                        
   build-ubuntu:
     runs-on: ubuntu-24.04
@@ -147,4 +147,4 @@ jobs:
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         run: |
           dotnet pack Tennisi.Xunit.v2.ParallelTestFramework.sln -c Release /p:Version=${{ env.VERSION }}
-          dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY3 }}
+          dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY6 }}
