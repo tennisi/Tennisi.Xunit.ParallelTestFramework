@@ -26,10 +26,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Tennisi.Xunit.v2.ParallelTestFramework\Tennisi.Xunit.v2.ParallelTestFramework.csproj">
+        <ProjectReference Pack="true" Include="..\Tennisi.Xunit.v2.ParallelTestFramework\Tennisi.Xunit.v2.ParallelTestFramework.csproj">
             <IncludeAssets>runtime; build</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Tennisi.Xunit\Tennisi.Xunit.csproj"  PrivateAssets="all"
+                          Pack="true"  />
     </ItemGroup>
 
     <PropertyGroup>
