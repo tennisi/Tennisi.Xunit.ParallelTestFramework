@@ -39,17 +39,6 @@ jobs:
           dotnet restore Tennisi.Xunit.v2.ParallelTestFramework.UI.sln
         shell: pwsh
 
-      - name: Build
-        run: |
-          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln /property:Configuration=Release --no-restore
-        shell: pwsh
-
-      - name: Run tests
-        run: |
-          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --configuration Debug
-          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --no-build --verbosity normal
-        shell: pwsh
-
       - name: Get MinVer version
         id: get_version
         run: |
@@ -73,6 +62,17 @@ jobs:
             $version = $env:MINVER_VERSION
           }
           echo "VERSION=$version" >> $env:GITHUB_ENV
+        shell: pwsh
+
+      - name: Build
+        run: |
+          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln /property:Configuration=Release --no-restore
+        shell: pwsh
+
+      - name: Run tests
+        run: |
+          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --configuration Debug
+          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.UI.sln --no-build --verbosity normal
         shell: pwsh
 
       - name: Pack and Push
@@ -112,14 +112,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Tennisi.Xunit.v2.ParallelTestFramework.sln
 
-      - name: Build
-        run: dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln /property:Configuration=Release --no-restore
-
-      - name: Run tests
-        run: |
-          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln --configuration Debug
-          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.sln --no-build --verbosity normal
-
       - name: Get MinVer version
         id: get_version
         run: |
@@ -141,6 +133,14 @@ jobs:
             VERSION=${{ env.MINVER_VERSION }}
           fi
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Build
+        run: dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln /property:Configuration=Release --no-restore
+
+      - name: Run tests
+        run: |
+          dotnet build Tennisi.Xunit.v2.ParallelTestFramework.sln --configuration Debug
+          dotnet test Tennisi.Xunit.v2.ParallelTestFramework.sln --no-build --verbosity normal
 
       - name: Pack and Push
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
