@@ -79,9 +79,12 @@ jobs:
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         run: |
-          dotnet pack ./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
-          $nupkgFile = "./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.${{ env.VERSION }}.nupkg"
-          dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}
+          if ($env:VERSION -match '\d+\.\d+\.\d+')
+          {
+            dotnet pack ./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.csproj -c Release /p:Version=${{ env.VERSION }} /p:PackageOutputPath=./
+            $nupkgFile = "./Tennisi.Xunit.v2.ParallelTestFramework.UI/Tennisi.Xunit.v2.ParallelTestFramework.UI.${{ env.VERSION }}.nupkg"
+            dotnet nuget push $nupkgFile --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY7 }}
+          }
                        
   build-ubuntu:
     runs-on: ubuntu-24.04
