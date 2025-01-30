@@ -8,10 +8,12 @@
         <RootNamespace>Tennisi.v3.Tests</RootNamespace>
         <OutputType>exe</OutputType>
         <NoWarn>$(NoWarn);CA1812;CA1062;CA1852;CA1308</NoWarn>
-    </PropertyGroup>
-    
-    <PropertyGroup>
         <FullTestParallelization>true</FullTestParallelization>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
 
     <ImportGroup>
@@ -26,11 +28,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
         <PackageReference Include="xunit.v3" Version="1.0.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
         <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -38,6 +37,90 @@
         <None Update="xunit.runner.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+
+        <Compile Remove="TestOutputHelperTests.cs" />
+
+        <None Include="TestOutputHelperTests.cs" />
+
+        <Compile Remove="SequentialTheoryTests.cs" />
+
+        <None Include="SequentialTheoryTests.cs" />
+
+        <Compile Remove="SequentialCollectionTests.cs" />
+
+        <None Include="SequentialCollectionTests.cs" />
+
+        <Compile Remove="SequentialCollectionAttributeTests.cs" />
+
+        <None Include="SequentialCollectionAttributeTests.cs" />
+
+        <Compile Remove="RetryTest.cs" />
+
+        <None Include="RetryTest.cs" />
+
+        <Compile Remove="ParallelCollectionTests.cs" />
+
+        <None Include="ParallelCollectionTests.cs" />
+
+        <Compile Remove="ParallelCollectionMultiClass1AttributeTests.cs" />
+
+        <None Include="ParallelCollectionMultiClass1AttributeTests.cs" />
+
+        <Compile Remove="ParallelCollectionAttributeTests.cs" />
+
+        <None Include="ParallelCollectionAttributeTests.cs" />
+
+        <Compile Remove="ParallelTagTests.cs" />
+
+        <None Include="ParallelTagTests.cs" />
+
+        <Compile Remove="DisabledParallelizationSequentialTheoryTests.cs" />
+
+        <None Include="DisabledParallelizationSequentialTheoryTests.cs" />
+
+        <Compile Remove="ParallelDerivationTagTests.cs" />
+
+        <None Include="ParallelDerivationTagTests.cs" />
+
+        <Compile Remove="ParallelTheoryTests.cs" />
+
+        <None Include="ParallelTheoryTests.cs" />
+
+        <Compile Remove="ParallelCollectionMultiClass2AttributeTests.cs" />
+
+        <None Include="ParallelCollectionMultiClass2AttributeTests.cs" />
+
+        <Compile Remove="MemberDataAttributeTests.cs" />
+
+        <None Include="MemberDataAttributeTests.cs" />
+
+        <Compile Remove="ParallelMultiClassCollectionFixture.cs" />
+
+        <None Include="ParallelMultiClassCollectionFixture.cs" />
+
+        <Compile Remove="ConcurrencyFixture.cs" />
+
+        <None Include="ConcurrencyFixture.cs" />
+
+        <Compile Remove="CollectionConcurrencyFixture.cs" />
+
+        <None Include="CollectionConcurrencyFixture.cs" />
+
+        <Compile Remove="CollectionAttributeSequentialTheoryTests.cs" />
+
+        <None Include="CollectionAttributeSequentialTheoryTests.cs" />
+
+        <Compile Remove="BlockingCollectionTests.cs" />
+
+        <None Include="BlockingCollectionTests.cs" />
+
+        <Compile Remove="AssemblyInfoExtractorTests.cs" />
+
+        <None Include="AssemblyInfoExtractorTests.cs" />
+
+        <Compile Remove="BlockingTheoryTests.cs" />
+
+        <None Include="BlockingTheoryTests.cs" />
     </ItemGroup>
     
 </Project>

@@ -1,8 +1,6 @@
 ﻿using Xunit.Internal;
 using Xunit.Sdk;
-using Xunit.v3;
-
-namespace Tennisi.Xunit;
+using Xunit.v3;namespace Tennisi.Xunit;
 
 /// <inheritdoc />
 public class ParallelTestFrameworkExecutor(IXunitTestAssembly testAssembly) :

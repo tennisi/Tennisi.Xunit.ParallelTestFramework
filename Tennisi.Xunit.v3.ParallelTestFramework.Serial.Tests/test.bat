@@ -1,0 +1,1 @@
+dotnet test -- --xunit-diagnostics on
