@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
-using Tennisi.Xunit.v2;
 using XmlDocMarkdown.Core;
 
 namespace DocGen;

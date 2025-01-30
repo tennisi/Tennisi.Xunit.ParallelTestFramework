@@ -15,7 +15,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\Tennisi.Xunit.v2.ParallelTestFramework.Tests\Tennisi.Xunit.v2.ParallelTestFramework.Tests.csproj" />
       <ProjectReference Include="..\Tennisi.Xunit.v2.ParallelTestFramework\Tennisi.Xunit.v2.ParallelTestFramework.csproj" />
     </ItemGroup>
 
