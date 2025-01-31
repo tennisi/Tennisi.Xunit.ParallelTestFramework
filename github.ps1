@@ -18,7 +18,6 @@ if ($lastTag -match '^(\d+)\.(\d+)\.(\d+)-(.+)\.(\d+)$') {
     $patch = [int]$matches[3]
     $preRelease = $matches[4]  # e.g. "preview", "alpha", etc.
     $build = [int]$matches[5] + 1  # Increment last number in pre-release
-	$build=54
     $newTag = "$major.$minor.$patch-$preRelease.$build"
 } else {
     Write-Host "No valid tag found. Starting from 1.0.0-preview.0..." -ForegroundColor Green

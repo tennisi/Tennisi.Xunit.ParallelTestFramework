@@ -8,7 +8,7 @@
         <IsPackable>True</IsPackable>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>Tennisi.Xunit</RootNamespace>
-        <NoWarn>$(NoWarn);CA1812;CA1416;CA1852</NoWarn>
+        <NoWarn>$(NoWarn);CA1812;CA1416;CA1852;CA1515</NoWarn>
     </PropertyGroup>
     
     <PropertyGroup>
