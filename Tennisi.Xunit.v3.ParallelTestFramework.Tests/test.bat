@@ -1,1 +1,1 @@
-dotnet test -p:TestingPlatformCaptureOutput=true --blame-hang --logger "console;verbosity=detailed"
+dotnet test -p:TestingPlatformCaptureOutput=true --blame-hang --logger "console;verbosity=detailed" -- --xunit-internal-diagnostics on --show-live-output on

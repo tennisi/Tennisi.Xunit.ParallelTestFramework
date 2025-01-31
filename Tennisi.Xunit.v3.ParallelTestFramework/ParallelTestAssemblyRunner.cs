@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using Xunit;
 using Xunit.Internal;
 using Xunit.Sdk;
 using Xunit.v3;
@@ -27,6 +29,7 @@ public class ParallelTestAssemblyRunner :
 	/// <param name="testCases">The test cases associated with the test assembly.</param>
 	/// <param name="executionMessageSink">The message sink to send execution messages to.</param>
 	/// <param name="executionOptions">The execution options to use when running tests.</param>
+	[SuppressMessage("Reliability", "CA2007:Попробуйте вызвать ConfigureAwait для ожидаемой задачи", Justification = "Xunit original design")]
 	public async ValueTask<RunSummary> Run(
 		IXunitTestAssembly testAssembly,
 		IReadOnlyCollection<IXunitTestCase> testCases,
@@ -42,7 +45,7 @@ public class ParallelTestAssemblyRunner :
 
 		var runner = ParallelSettings.GetRunner(testAssembly.AssemblyName);
 		var seed = Randomizer.Seed;
-		executionMessageSink.OnMessage(new DiagnosticMessage($"The test assembly seed: {seed}, runner: {runner}"));
+		TestContext.Current.SendDiagnosticMessage($"The test assembly seed: {seed}, runner: {runner}");
 
 		await using var ctxt = new ParallelTestAssemblyRunnerContext(testAssembly, testCases, executionMessageSink, executionOptions);
 		await ctxt.InitializeAsync();

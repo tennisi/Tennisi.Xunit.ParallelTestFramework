@@ -1,1 +1,0 @@
-dotnet test -- --seed 2400002 --xunit-diagnostics on

@@ -21,7 +21,7 @@ if ($lastTag -match '^(\d+)\.(\d+)\.(\d+)-(.+)\.(\d+)$') {
     $newTag = "$major.$minor.$patch-$preRelease.$build"
 } else {
     Write-Host "No valid tag found. Starting from 1.0.0-preview.0..." -ForegroundColor Green
-    $newTag = "1.0.0-preview.0"
+    $newTag = "1.0.0-preview.54"
 }
 
 # Commit and add changes (if needed)
