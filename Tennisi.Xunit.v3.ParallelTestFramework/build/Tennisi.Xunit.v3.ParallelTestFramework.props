@@ -5,8 +5,8 @@
             <_Parameter1_IsLiteral>true</_Parameter1_IsLiteral>
         </AssemblyAttribute>
     </ItemGroup>
-    <PropertyGroup>
-        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
-    </PropertyGroup>
+<!--    <PropertyGroup>-->
+<!--        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>-->
+<!--        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>-->
+<!--    </PropertyGroup>-->
 </Project>
