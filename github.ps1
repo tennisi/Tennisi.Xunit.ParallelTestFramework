@@ -43,7 +43,7 @@ git tag $newTag
 
 # Push everything (commits + tags) in one go
 Write-Host "Pushing changes and tags to remote..." -ForegroundColor Yellow
-# git push --force
-# git push origin --tags --force
+git push --force
+git push origin --tags --force
 
 Write-Host "Tagging and pushing completed successfully!" -ForegroundColor Green

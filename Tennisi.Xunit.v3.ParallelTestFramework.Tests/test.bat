@@ -1,1 +1,1 @@
-dotnet test --logger "console;verbosity=detailed"
+dotnet test -p:TestingPlatformCaptureOutput=true --blame-hang --logger "console;verbosity=detailed"
