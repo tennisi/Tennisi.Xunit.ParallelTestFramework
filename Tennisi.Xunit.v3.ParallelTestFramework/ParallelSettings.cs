@@ -80,21 +80,22 @@ internal static class ParallelSettings
             return new TestAsm(force: force, disbale:disable, opts: opts, runner: runner);
         });
     }
-    
+
     private static string DetectTestRunner(Assembly assembly)
     {
         var projectName = Path.GetFileNameWithoutExtension(assembly.Location);
+        var result = "";
 
         var depsFilePath = Path.Combine(Path.GetDirectoryName(assembly.Location)!, $"{projectName}.deps.json");
 
         if (!File.Exists(depsFilePath))
         {
-            return "unknown runner";
+            return $"{projectName}.deps.json not found";
         }
 
         var jsonContent = File.ReadAllText(depsFilePath);
         using var doc = JsonDocument.Parse(jsonContent);
-        
+
         if (doc.RootElement.TryGetProperty("libraries", out var librariesElement))
         {
             var libraries = new Dictionary<string, JsonElement>();
@@ -103,30 +104,33 @@ internal static class ParallelSettings
             {
                 libraries[library.Name] = library.Value;
             }
-            
+
             var testRunnerPattern = new List<string>
             {
-                "xunit.v3.runner.visualstudio",  // Look for anything that has 'xunit.runner' in its name
-                "xunit.v3.runner.console",  // xUnit v3 runners
-                "xunit.runner.console",  // Console runner
-                "xunit.runner.visualstudio",  // Visual Studio runner
-                "xunit.runner.msbuild",  // MSBuild runner
-                "xunit.runner.utility",  // Utility runner
-                "xunit.runner.reporters",  // Reporter libraries
-                "xunit.runner.devices",  // Device runners
-                "xunit.runner.stride",  // Stride runner
-                "xunit.runner.testSuiteInstrumentation"  // Test suite instrumentation
+                "xunit.runner.console",
+                "xunit.runner.visualstudio",
+                "xunit.runner.msbuild",
+                "xunit.runner.utility",
+                "xunit.runner.reporters",
+                "xunit.runner.devices",
+                "xunit.runner.stride",
+                "xunit.runner.testSuiteInstrumentation",
+                "xunit.v3.runner.console",
+                "xunit.v3.runner.visualstudio"
             };
 
             foreach (var library in libraries.Keys)
             {
                 if (testRunnerPattern.Any(pattern => library.Contains(pattern, StringComparison.OrdinalIgnoreCase)))
                 {
-                    return library;
+                    result += library + ";";
                 }
             }
         }
+        
+        if (string.IsNullOrEmpty(result))
+            result = "unknown runner";
 
-        return "unknown runner";
+        return result;
     }
 }
