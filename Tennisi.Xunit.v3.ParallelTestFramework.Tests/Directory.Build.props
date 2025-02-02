@@ -1,0 +1,32 @@
+﻿<Project>
+    <ItemGroup Condition="'$(FullTestParallelization)' == 'true'">
+        <AssemblyAttribute Include="Tennisi.Xunit.FullTestParallelizationAttribute">
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(DisableTestParallelization)' == 'true'">
+        <AssemblyAttribute Include="Tennisi.Xunit.DisableTestParallelizationAttribute">
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(TestRunner)' == 'console'">
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+        <TestingPlatformCaptureOutput>true</TestingPlatformCaptureOutput>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TestRunner)' == 'console'">
+        <PackageReference Include="xunit.v3.runner.console" Version="1.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TestRunner)' != 'console'">
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>
