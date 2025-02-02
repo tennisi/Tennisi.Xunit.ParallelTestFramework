@@ -4,6 +4,8 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MyLibrary.xml</DocumentationFile>
     </PropertyGroup>
 
     <Target Name="RunAfterBuild" AfterTargets="Build">

@@ -8,6 +8,8 @@
         <Description>Run xUnit test cases in parallel</Description>
         <RootNamespace>Tennisi.Xunit</RootNamespace>
         <NoWarn>$(NoWarn);CA1812</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
 </Project>

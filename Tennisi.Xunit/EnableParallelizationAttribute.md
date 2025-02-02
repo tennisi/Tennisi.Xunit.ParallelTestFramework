@@ -1,5 +1,7 @@
 # EnableParallelizationAttribute class
 
+Attribute that enables parallel test execution for a class, overriding any higher-level settings that disable parallelization.
+
 ```csharp
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class EnableParallelizationAttribute : Attribute

@@ -1,8 +1,14 @@
 # ParallelTag.Next method
 
+Derives the next unique value based on the current unique tag.
+
 ```csharp
 public ParallelTag Next(int increment = 1)
 ```
+
+## Return Value
+
+A new [`ParallelTag`](../ParallelTag.md) instance with a derived unique tag.
 
 ## See Also
 

@@ -1,5 +1,7 @@
 # DisableTestParallelizationAttribute class
 
+Assembly-level attribute that disables `xunit.discovery.PreEnumerateTheories`, `xunit.parallelizeTestCollections`, `xunit.parallelizeAssembly` and enables xunit.execution.DisableParallelization in the xUnit framework. Alternatively, the `DisbaleTestParallelization` property can be set in the project file to achieve the same effect.
+
 ```csharp
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class DisableTestParallelizationAttribute : Attribute
@@ -10,6 +12,10 @@ public sealed class DisableTestParallelizationAttribute : Attribute
 | name | description |
 | --- | --- |
 | [DisableTestParallelizationAttribute](DisableTestParallelizationAttribute/DisableTestParallelizationAttribute.md)() | The default constructor. |
+
+## Remarks
+
+When applied, it reverts the behavior of test execution to the standard xUnit execution model.
 
 ## See Also
 

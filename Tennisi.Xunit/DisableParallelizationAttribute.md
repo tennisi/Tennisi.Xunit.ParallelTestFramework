@@ -1,5 +1,7 @@
 # DisableParallelizationAttribute class
 
+Attribute that disables parallel test execution for a class, overriding any higher-level settings that enable parallelization.
+
 ```csharp
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class DisableParallelizationAttribute : Attribute

@@ -1,5 +1,7 @@
 # FullTestParallelizationAttribute class
 
+An assembly-level attribute that enables `parallelizeTestCollections` and `preEnumerateTheories` in the xUnit framework. Alternatively, you can set the `FullTestParallelization` property in your project file.
+
 ```csharp
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class FullTestParallelizationAttribute : Attribute

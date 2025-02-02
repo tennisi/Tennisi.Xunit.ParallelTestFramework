@@ -1,8 +1,14 @@
 # ParallelTag.AsGuid method
 
+Converts the unique tag to a GUID representation.
+
 ```csharp
 public Guid AsGuid()
 ```
+
+## Return Value
+
+The GUID value corresponding to the unique tag.
 
 ## See Also
 

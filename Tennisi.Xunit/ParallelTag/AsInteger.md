@@ -1,8 +1,14 @@
 # ParallelTag.AsInteger method
 
+Converts the unique tag to an integer representation.
+
 ```csharp
 public int AsInteger()
 ```
+
+## Return Value
+
+The integer value corresponding to the unique tag.
 
 ## See Also
 

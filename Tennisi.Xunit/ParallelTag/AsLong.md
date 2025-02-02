@@ -1,8 +1,14 @@
 # ParallelTag.AsLong method
 
+Converts the unique tag to a long representation.
+
 ```csharp
 public long AsLong()
 ```
+
+## Return Value
+
+The long value corresponding to the unique tag.
 
 ## See Also
 

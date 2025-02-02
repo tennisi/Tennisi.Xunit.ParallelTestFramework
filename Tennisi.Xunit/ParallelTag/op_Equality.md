@@ -1,8 +1,19 @@
 # ParallelTag Equality operator
 
+Determines whether two [`ParallelTag`](../ParallelTag.md) instances are equal.
+
 ```csharp
 public static bool operator ==(ParallelTag left, ParallelTag right)
 ```
+
+| parameter | description |
+| --- | --- |
+| left | The first instance to compare. |
+| right | The second instance to compare. |
+
+## Return Value
+
+`true` if the instances are equal; otherwise, `false`.
 
 ## See Also
 
