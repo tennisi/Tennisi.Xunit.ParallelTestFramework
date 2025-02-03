@@ -65,12 +65,17 @@ internal class ParallelTestClassRunner : XunitTestClassRunner
     /// <inheritdoc />
     protected override async Task<RunSummary> RunTestMethodsAsync()
     {
-        var disableParallelizationAttribute = TestClass.Class.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any();
-
-        var disableParallelizationOnCustomCollection = TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
-                                                       && !TestClass.Class.GetCustomAttributes(typeof(EnableParallelizationAttribute)).Any();
-
-        var disableParallelization = _disableTestParallelizationOnAssembly || disableParallelizationAttribute || disableParallelizationOnCustomCollection;
+        bool disableParallelization;
+        if (_disableTestParallelizationOnAssembly)
+        {
+            disableParallelization = true;
+        }
+        else
+        {
+            disableParallelization = TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
+                                     && !TestClass.Class.IsEnabledParallelization()
+                                     || TestClass.Class.IsDisabledParallelization();
+        }
 
         if (disableParallelization)
             return await base.RunTestMethodsAsync().ConfigureAwait(false);

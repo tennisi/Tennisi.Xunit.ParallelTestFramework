@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FullTestParallelization>true</FullTestParallelization>
+    <TestParallelization>true</TestParallelization>
   </PropertyGroup>
   
   <ImportGroup>

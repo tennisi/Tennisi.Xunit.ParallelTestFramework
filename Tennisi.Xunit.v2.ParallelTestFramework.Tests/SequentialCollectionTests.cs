@@ -2,7 +2,7 @@ using Xunit;
 
 namespace Tennisi.Xunit.v2.ParallelTestFramework.Tests;
 
-[DisableParallelization]
+[TestParallelization(false)]
 public class SequentialCollectionTests : IClassFixture<ConcurrencyFixture>
 {
     private readonly ConcurrencyFixture _fixture;

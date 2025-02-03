@@ -8,14 +8,14 @@ internal static class ParallelSettings
 {
     private sealed class TestAsm
     {
-        public TestAsm(bool disbale, bool force, ITestFrameworkOptions opts)
+        public TestAsm(bool? disable, bool? full, ITestFrameworkOptions opts)
         {
             Opts = opts;
-            Force = force;
-            Disable = disbale;
+            Full = full;
+            Disable = disable;
         }
-        internal bool Disable {get; set;}
-        internal bool Force {get; set;}
+        internal bool? Disable {get; set;}
+        internal bool? Full {get; set;}
         internal ITestFrameworkOptions Opts { get; set; }
     }
     private static readonly ConcurrentDictionary<string, TestAsm> TestCollectionsCache = new();
@@ -29,14 +29,14 @@ internal static class ParallelSettings
     {
         var behaviour = DetectParallelBehaviour(assemblyName, opts);
         
-        if (behaviour.Force && !behaviour.Disable)
+        if (behaviour is { Full: true, Disable: false })
         {
             opts.SetValue("xunit.discovery.PreEnumerateTheories", true);
             opts.SetValue("xunit.execution.DisableParallelization", false);
             opts.SetValue("xunit.parallelizeTestCollections", true);
             opts.SetValue("xunit.parallelizeAssembly", true);
         }
-        else if (behaviour.Disable)
+        else if (behaviour.Disable == true)
         {
             opts.SetValue("xunit.discovery.PreEnumerateTheories", false);
             opts.SetValue("xunit.execution.DisableParallelization", true);
@@ -60,9 +60,8 @@ internal static class ParallelSettings
         return TestCollectionsCache.GetOrAdd(assemblyName , name =>
         {
             var assembly = Assembly.Load(new AssemblyName(name));
-            var force = assembly.GetCustomAttributes(typeof(FullTestParallelizationAttribute), false).Length != 0;
-            var disable = assembly.GetCustomAttributes(typeof(DisableTestParallelizationAttribute), false).Length != 0;
-            return new TestAsm(force: force, disbale:disable, opts: opts);
+            var test = assembly.GetCustomAttribute<TestParallelizationAttribute>();
+            return new TestAsm(disable: test?.IsDisabledParallelization, full: test?.IsFullParallelization, opts: opts);
         });
     }
 }

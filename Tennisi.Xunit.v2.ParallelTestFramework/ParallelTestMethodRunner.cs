@@ -37,13 +37,24 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
     /// <inheritdoc />
     protected override async Task<RunSummary?> RunTestCasesAsync()
     {
-        var disableParallelization =
-            _disableTestParallelizationOnAssembly ||
-            TestMethod.TestClass.Class.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any()
-            || TestMethod.TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
-            || TestMethod.Method.GetCustomAttributes(typeof(DisableParallelizationAttribute)).Any()
-            || TestMethod.Method.GetCustomAttributes(typeof(MemberDataAttribute)).Any(a =>
-                a.GetNamedArgument<bool>(nameof(MemberDataAttribute.DisableDiscoveryEnumeration)));
+        bool disableParallelization;
+        if (_disableTestParallelizationOnAssembly)
+        {
+            disableParallelization = true;
+        }
+        else
+        {
+            disableParallelization =
+                (
+                    TestMethod.TestClass.Class.GetCustomAttributes(typeof(CollectionAttribute)).Any()
+                     && !TestMethod.TestClass.Class.IsEnabledParallelization())
+                || TestMethod.TestClass.Class.IsDisabledParallelization() 
+                || TestMethod.Method.IsDisabledParallelization()
+                || TestMethod.Method.GetCustomAttributes(typeof(MemberDataAttribute)).Any(a =>
+                    a.GetNamedArgument<bool>(nameof(MemberDataAttribute.DisableDiscoveryEnumeration))
+                );
+        }
+
         
         var summary = new RunSummary();
         if (!disableParallelization && ParallelSettings.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))

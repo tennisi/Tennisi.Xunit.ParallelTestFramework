@@ -12,35 +12,43 @@ internal static class Program
         get
         {
             var dir = Directory.GetCurrentDirectory();
-            while (!File.Exists(Path.Combine(dir, $"{"Tennisi.Xunit.v2.ParallelTestFramework"}.sln")))
+            while (!File.Exists(Path.Combine(dir, "Tennisi.Xunit.v2.ParallelTestFramework.sln")))
                 dir = Path.GetFullPath(Path.Combine(dir, ".."));
             return dir;
         }
     }
     private static string SourceDir => Path.Combine(OutputDir, $"{Libraries.First()}");
     private static string FooterFile => Path.Combine(OutputDir, $"DocGen/footer.md");
-    private static string Library => "Tennisi.Xunit";
-    private static readonly string[] Libraries = {Library};
-    private static readonly string[] ArgsArray = Libraries.Union(new[]
+    private static readonly string[] Libraries = {"Tennisi.Xunit","Tennisi.Xunit.v2.ParallelTestFramework"};
+
+    private static string[] ArgsArray(string library)
     {
-        OutputDir,
-        "--quiet",
-        "--visibility", "public",
-        "--clean"
-    }).ToArray();
+        var result = new[]
+        {
+            library,
+            OutputDir,
+            "--quiet",
+            "--visibility", "public",
+            "--clean"
+        };
+        return result;
+    }
 
     public static void Main()
     {
         Console.WriteLine('_');
         Console.WriteLine(SourceDir);
         Console.WriteLine(OutputDir);
-        XmlDocMarkdownApp.Run(ArgsArray);
-        var indexPath = Path.Combine(OutputDir, Libraries.First() + ".md");
-        Console.WriteLine($"indexPath: {indexPath}");
         var readmePath = Path.Combine(OutputDir, "README.md");
-        File.Copy(indexPath, readmePath, overwrite: true);
+        File.WriteAllText(readmePath, string.Empty);
+        foreach (var libary in Libraries)
+        {
+            XmlDocMarkdownApp.Run(ArgsArray(libary));
+            var indexPath = Path.Combine(OutputDir, libary + ".md");
+            var indexContent = File.ReadAllText(indexPath);
+            File.AppendAllText(readmePath, Environment.NewLine + indexContent);
+        }
         var footerContent = File.ReadAllText(FooterFile);
         File.AppendAllText(readmePath, Environment.NewLine + footerContent);
-        File.Delete(indexPath);
     }
 }
