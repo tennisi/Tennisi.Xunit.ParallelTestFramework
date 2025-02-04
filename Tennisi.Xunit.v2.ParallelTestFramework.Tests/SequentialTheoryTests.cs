@@ -15,7 +15,7 @@ public class SequentialTheoryTests : IClassFixture<ConcurrencyFixture>
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
-    [DisableParallelization]
+    [TestParallelization(false)]
     [SuppressMessage("Roslynator", "RCS1163:Unused parameter", Justification = "By Author")]
     [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters", Justification = "By Author")]
     public async Task Theory(int value)

@@ -8,7 +8,7 @@ namespace Tennisi.Xunit;
 /// facilitating parallel execution of tests while ensuring consistency in tagging.
 /// </summary>
 /// <remarks>
-/// Can be used only with <c>FullTestParallelizationAttribute</c>
+/// Can be used only with <c>TestParallelizationAttribute</c> with 'true' value
 /// </remarks>
 /// <example>
 /// <code>
