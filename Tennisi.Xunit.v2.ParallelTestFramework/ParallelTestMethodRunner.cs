@@ -83,7 +83,7 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
     private async Task<RunSummary> RunTestCaseAsync2(IXunitTestCase testCase, bool disableParallelization)
     {
         if (disableParallelization)
-            return await RunDiagnosticTestCaseAsync(testCase, _constructorArguments);
+            return await RunDiagnosticTestCaseAsync(testCase);
         return await RunTestCaseAsync(testCase);
     }
 
@@ -91,12 +91,7 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
     [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Xunit designed")]
     protected override async Task<RunSummary> RunTestCaseAsync(IXunitTestCase testCase)
     {
-        var args = _constructorArguments.Select(a => a is TestOutputHelper ? new TestOutputHelper() : a).ToArray();
-        var parallelTag = ParallelTag.FromTestCase(_constructorArguments, testCase.UniqueID);
-        if (parallelTag != null)
-            ParallelTag.Inject(ref parallelTag, args);
-
-        var action = () => RunDiagnosticTestCaseAsync(testCase, args);
+        var action = () => RunDiagnosticTestCaseAsync(testCase);
         if (SynchronizationContext.Current == null)
             return await Task.Run(action, CancellationTokenSource.Token).ConfigureAwait(false);
         var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -106,8 +101,13 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
                          .ConfigureAwait(false);
     }
     
-    private async Task<RunSummary> RunDiagnosticTestCaseAsync(IXunitTestCase testCase, object?[] args)
+    private async Task<RunSummary> RunDiagnosticTestCaseAsync(IXunitTestCase testCase)
     {
+        var args = _constructorArguments.Select(a => a is TestOutputHelper ? new TestOutputHelper() : a).ToArray();
+        var parallelTag = ParallelTag.FromTestCase(_constructorArguments, testCase.UniqueID);
+        if (parallelTag != null)
+            ParallelTag.Inject(ref parallelTag, args);
+        
         var parameters = testCase.TestMethodArguments != null
             ? string.Join(", ", testCase.TestMethodArguments.Select(a => a?.ToString() ?? "null"))
             : string.Empty;

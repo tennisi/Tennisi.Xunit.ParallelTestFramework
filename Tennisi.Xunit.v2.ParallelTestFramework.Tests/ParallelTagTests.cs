@@ -8,6 +8,25 @@ using Xunit.Abstractions;
 
 namespace Tennisi.Xunit.v2.ParallelTestFramework.Tests;
 
+[Collection("ParallelTagTestsWithCollection")]
+public class ParallelTagTestsWithCollection
+{
+    private readonly ParallelTag _tag;
+
+    [SuppressMessage("Usage", "xUnit1041:General design", Justification = "General design")]
+    public ParallelTagTestsWithCollection(ParallelTag parallelTag)
+    {
+        _tag = parallelTag;
+    }
+    
+        
+    [Fact]
+    public void TaskTag()
+    {
+        Assert.False(_tag.Equals(new ParallelTag()));
+    }
+}
+
 public class ParallelTagTests
 {
     private readonly ParallelTag _tag;
