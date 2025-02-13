@@ -1,4 +1,4 @@
-# TestParallelizationAttribute constructor (1 of 3)
+# TestParallelizationAttribute constructor (1 of 5)
 
 Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class.
 
@@ -13,9 +13,9 @@ public TestParallelizationAttribute()
 
 ---
 
-# TestParallelizationAttribute constructor (2 of 3)
+# TestParallelizationAttribute constructor (2 of 5)
 
-Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class.
+Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class with a string parallelization setting and degree.
 
 ```csharp
 public TestParallelizationAttribute(bool enabled)
@@ -32,9 +32,9 @@ public TestParallelizationAttribute(bool enabled)
 
 ---
 
-# TestParallelizationAttribute constructor (3 of 3)
+# TestParallelizationAttribute constructor (3 of 5)
 
-Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class.
+Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class with a string parallelization setting and degree.
 
 ```csharp
 public TestParallelizationAttribute(string enabled)
@@ -43,6 +43,46 @@ public TestParallelizationAttribute(string enabled)
 | parameter | description |
 | --- | --- |
 | enabled | Specifies whether parallelization is enabled. Defaults to `true`. |
+
+## See Also
+
+* class [TestParallelizationAttribute](../TestParallelizationAttribute.md)
+* namespace [Tennisi.Xunit](../../Tennisi.Xunit.md)
+
+---
+
+# TestParallelizationAttribute constructor (4 of 5)
+
+Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class with a specified parallelization setting and degree.
+
+```csharp
+public TestParallelizationAttribute(bool enabled, int degreeOfParallelism)
+```
+
+| parameter | description |
+| --- | --- |
+| enabled | Specifies whether parallelization is enabled. Defaults to `true`. |
+| degreeOfParallelism | 1. If the degreeOfParallelism is not specified, the number of tasks is assumed to match Environment.ProcessorCount. 2. If the degreeOfParallelism is set to 0, the xUnit default settings are applied. 3. Otherwise, the specified value is used as the limiter. |
+
+## See Also
+
+* class [TestParallelizationAttribute](../TestParallelizationAttribute.md)
+* namespace [Tennisi.Xunit](../../Tennisi.Xunit.md)
+
+---
+
+# TestParallelizationAttribute constructor (5 of 5)
+
+Initializes a new instance of the [`TestParallelizationAttribute`](../TestParallelizationAttribute.md) class with a string parallelization setting and degree.
+
+```csharp
+public TestParallelizationAttribute(string enabled, string degreeOfParallelism)
+```
+
+| parameter | description |
+| --- | --- |
+| enabled | Specifies whether parallelization is enabled. Defaults to `true`. |
+| degreeOfParallelism | A string representation of the maximum number of test tasks to run in parallel. 1. If the degreeOfParallelism is not specified, the number of tasks is assumed to match Environment.ProcessorCount. 2. If the degreeOfParallelism is set to 0, the xUnit default settings are applied. 3. Otherwise, the specified value is used as the limiter. |
 
 ## See Also
 

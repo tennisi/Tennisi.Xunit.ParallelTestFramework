@@ -1,6 +1,6 @@
 # TestParallelizationAttribute class
 
-An attribute that controls test parallelization in the xUnit framework. Can be applied at the assembly or test class level.
+An attribute that controls test parallelization and the maximum number of test tasks running in parallel in the xUnit framework. Can be applied at the assembly, test class, or test method level.
 
 ```csharp
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
@@ -12,13 +12,17 @@ public sealed class TestParallelizationAttribute : Attribute
 | name | description |
 | --- | --- |
 | [TestParallelizationAttribute](TestParallelizationAttribute/TestParallelizationAttribute.md)() | Initializes a new instance of the [`TestParallelizationAttribute`](./TestParallelizationAttribute.md) class. |
-| [TestParallelizationAttribute](TestParallelizationAttribute/TestParallelizationAttribute.md)(…) | Initializes a new instance of the [`TestParallelizationAttribute`](./TestParallelizationAttribute.md) class. (2 constructors) |
+| [TestParallelizationAttribute](TestParallelizationAttribute/TestParallelizationAttribute.md)(…) | Initializes a new instance of the [`TestParallelizationAttribute`](./TestParallelizationAttribute.md) class with a specified parallelization setting and degree. (4 constructors) |
+| [DegreeOfParallelism](TestParallelizationAttribute/DegreeOfParallelism.md) { get; } | 1. If the degreeOfParallelism is not specified, the number of tasks is assumed to match Environment.ProcessorCount. 2. If the degreeOfParallelism is set to 0, the xUnit default settings are applied. 3. Otherwise, the specified value is used as the limiter. |
+| [Enabled](TestParallelizationAttribute/Enabled.md) { get; } | Gets the parallelization setting. |
 
 ## Remarks
 
-When applied at the **assembly level**, setting *enabled* to `true` enables `xunit.parallelizeTestCollections` and `xunit.discovery.PreEnumerateTheories`. Setting it to `false` disables `xunit.discovery.PreEnumerateTheories`, `xunit.parallelizeTestCollections`, and `xunit.parallelizeAssembly`, while enabling `xunit.execution.DisableParallelization`. These behaviors can also be controlled by setting the `TestParallelization` property in the project file.
+When applied at the assembly level, setting the [`Enabled`](./TestParallelizationAttribute/Enabled.md) parameter to `true` enables test collection parallelization and theory pre-enumeration. Setting it to `false` disables theory pre-enumeration, test collection parallelization, and assembly parallelization while enabling global parallelization disabling. These behaviors can also be controlled through project file settings.
 
-When applied at the **test class/method level**, it only controls whether that specific test class/method runs in parallel. By default, xUnit does not parallelize individual test classes, but setting *enabled* to `true` enables parallel execution for the class.
+When applied at the test class or method level, it only controls whether that specific test class or method runs in parallel. By default, xUnit does not parallelize individual test classes, but enabling this setting allows parallel execution for the class.
+
+The [`DegreeOfParallelism`](./TestParallelizationAttribute/DegreeOfParallelism.md) parameter controls the maximum number of test tasks running in parallel. If not specified, the number of tasks defaults to ProcessorCount. If set to `-1`, the xUnit default settings are applied. Otherwise, the specified value is used as the limiter.
 
 ## See Also
 

@@ -24,7 +24,7 @@ public struct ParallelTag : IEquatable<ParallelTag>
 
 ## Remarks
 
-Can be used only with `FullTestParallelizationAttribute`
+Can be used only with `TestParallelizationAttribute` with 'true' value
 
 ## Examples
 
