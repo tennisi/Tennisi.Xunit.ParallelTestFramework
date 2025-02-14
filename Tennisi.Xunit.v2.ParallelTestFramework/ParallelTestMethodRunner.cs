@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -31,13 +32,13 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
         _constructorArguments = constructorArguments;
         _disableTestParallelizationOnAssembly = 
             ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
-
     }
 
     /// <inheritdoc />
     protected override async Task<RunSummary?> RunTestCasesAsync()
     {
         bool disableParallelization;
+        SemaphoreSlim? limiter = null;
         if (_disableTestParallelizationOnAssembly)
         {
             disableParallelization = true;
@@ -53,14 +54,43 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
                 || TestMethod.Method.GetCustomAttributes(typeof(MemberDataAttribute)).Any(a =>
                     a.GetNamedArgument<bool>(nameof(MemberDataAttribute.DisableDiscoveryEnumeration))
                 );
+            limiter = ParallelSettings.GetLimiter(Class.Assembly.Name, TestMethod.TestClass);
         }
-
         
         var summary = new RunSummary();
         if (!disableParallelization && ParallelSettings.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))
         {
-            var caseTasks = TestCases.Select(x => RunTestCaseAsync2(x, disableParallelization));
-            var caseSummaries = await Task.WhenAll(caseTasks).ConfigureAwait(false);
+            IEnumerable<RunSummary> caseSummaries;
+            if (limiter != null)
+            {
+                var caseSummariesBag = new ConcurrentBag<RunSummary>();
+
+                await Parallel.ForEachAsync(
+                    TestCases,
+                    async (testCase, ct) =>
+                    {
+                        await limiter.WaitAsync(ct);
+                        try
+                        {
+                            var caseSummary =
+                                await RunTestCaseAsync2(testCase, disableParallelization).ConfigureAwait(false);
+                            caseSummariesBag.Add(caseSummary);
+                        }
+                        finally
+                        {
+                            limiter.Release();
+                        }
+                        
+                    });
+                caseSummaries = caseSummariesBag;
+            }
+            else
+            {
+                var caseTasks = TestCases.Select(x => RunTestCaseAsync2(x, disableParallelization));
+                var caseSummariesArr = await Task.WhenAll(caseTasks).ConfigureAwait(false);
+                caseSummaries = caseSummariesArr;
+            }
+            
             foreach (var caseSummary in caseSummaries)
             {
                 summary.Aggregate(caseSummary);

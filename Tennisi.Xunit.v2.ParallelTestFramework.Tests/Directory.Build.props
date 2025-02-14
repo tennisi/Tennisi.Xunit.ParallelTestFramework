@@ -3,6 +3,8 @@
         <AssemblyAttribute Include="Tennisi.Xunit.TestParallelizationAttribute">
             <_Parameter1>$(TestParallelization)</_Parameter1>
             <_Parameter1_IsLiteral>false</_Parameter1_IsLiteral>
+            <_Parameter2>0</_Parameter2>
+            <_Parameter2_IsLiteral>false</_Parameter2_IsLiteral>
         </AssemblyAttribute>
     </ItemGroup>
 </Project>
