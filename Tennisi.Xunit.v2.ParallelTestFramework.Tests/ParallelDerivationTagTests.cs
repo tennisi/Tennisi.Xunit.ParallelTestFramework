@@ -42,6 +42,35 @@ public class ParallelDerivationTagTests
         => Iterate(10, 10, x => ParallelTag.FromValue(x).Next().AsInteger());
 
     [Fact]
+    public void ItShouldGenerateShortenTag()
+    {
+        for (var n = 5; n <= 10; n++)
+        {
+            var result = new List<string>();
+            var tag = ParallelTag.FromValue("a3f1b6d92c8e45f7b1d0e3a4789c5f6b7d2e0c1a");
+            for (int i = 0; i < 100; i++)
+            {
+                var val = tag.AsString(n);
+                Assert.True(val.Length == n);
+                result.Add(val);
+                tag = tag.Next();
+            }
+            Assert.True(result.Distinct().Count() == result.Count);
+        }
+
+        try
+        {
+            var tag = ParallelTag.FromValue("a3f1b6d92c8e45f7b1d0e3a4789c5f6b7d2e0c1a");
+            tag.AsString(4);
+        }
+        catch
+        {
+            return;
+        }
+        Assert.True(false);
+    }
+    
+    [Fact]
     public void ItShouldCorrectlyHandleChainingOperations()
     {
         var tag = ParallelTag.FromValue("0000000000000000000000000000000000000000");
