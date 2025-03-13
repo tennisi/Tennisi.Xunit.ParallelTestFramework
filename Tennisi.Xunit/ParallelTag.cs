@@ -86,7 +86,7 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
     {
         if (length < 5)
         {
-            throw new ArgumentOutOfRangeException(nameof(length), "Length must be greater than five.");
+            throw new ArgumentOutOfRangeException(nameof(length), "Length must be greater than 5.");
         }
         var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(ToString()));
 
