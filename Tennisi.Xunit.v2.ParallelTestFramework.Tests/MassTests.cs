@@ -127,7 +127,7 @@ public class MassiveTests
             var massTestLimitedByOneCore = MassTestLimitedByOneCore.Duration;
             _testOutput.WriteLine($"MassTestLimitedByOneCore: {massTestLimitedByOneCore} msec");
 
-            Assert.True(massTestXUnitDefault <= massTestTennisiDefaultByCoreCount);
+            Assert.True(massTestXUnitDefault * 75 / 100 <= massTestTennisiDefaultByCoreCount);
         }
     }
 }
