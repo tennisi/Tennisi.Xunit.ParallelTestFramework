@@ -1,0 +1,1 @@
+dotnet test -p:TestRunner="console" --logger "console;verbosity=normal" -- --xunit-diagnostics on --xunit-internal-diagnostics on --show-live-output on

@@ -1,0 +1,1 @@
+powershell ./github.ps1
