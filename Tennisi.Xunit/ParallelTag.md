@@ -14,6 +14,7 @@ public struct ParallelTag : IEquatable<ParallelTag>
 | [AsGuid](ParallelTag/AsGuid.md)() | Converts the unique tag to a GUID representation. |
 | [AsInteger](ParallelTag/AsInteger.md)() | Converts the unique tag to an integer representation. |
 | [AsLong](ParallelTag/AsLong.md)() | Converts the unique tag to a long representation. |
+| [AsString](ParallelTag/AsString.md)(…) | Generates a shortened hash representation of the Tag preserving uniqueness and distribution characteristics. |
 | override [Equals](ParallelTag/Equals.md)(…) |  |
 | [Equals](ParallelTag/Equals.md)(…) |  |
 | override [GetHashCode](ParallelTag/GetHashCode.md)() |  |
