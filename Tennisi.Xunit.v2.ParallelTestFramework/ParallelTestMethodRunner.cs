@@ -30,14 +30,14 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
         _diagnosticMessageSink = diagnosticMessageSink;
         _constructorArguments = constructorArguments;
         _disableTestParallelizationOnAssembly = 
-            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
+            ParallelSettings.Instance.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
     }
 
     /// <inheritdoc />
     protected override async Task<RunSummary?> RunTestCasesAsync()
     {
         bool disableParallelization;
-        ParallelSettings.Limiter? limiter = null;
+        Limiter? limiter = null;
         if (_disableTestParallelizationOnAssembly)
         {
             disableParallelization = true;
@@ -53,11 +53,11 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
                 || TestMethod.Method.GetCustomAttributes(typeof(MemberDataAttribute)).Any(a =>
                     a.GetNamedArgument<bool>(nameof(MemberDataAttribute.DisableDiscoveryEnumeration))
                 );
-            limiter = ParallelSettings.GetLimiter(Class.Assembly.Name, TestMethod.TestClass);
+            limiter = ParallelSettings.Instance.GetLimiter(Class.Assembly.Name, TestMethod.TestClass);
         }
         
         var summary = new RunSummary();
-        if (!disableParallelization && ParallelSettings.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))
+        if (!disableParallelization && ParallelSettings.Instance.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))
         {
             IEnumerable<RunSummary> caseSummaries;
             if (limiter != null)

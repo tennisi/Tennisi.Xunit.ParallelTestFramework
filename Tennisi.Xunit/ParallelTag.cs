@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Globalization;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Tennisi.Xunit;
@@ -75,6 +76,31 @@ public readonly struct ParallelTag : IEquatable<ParallelTag>
     /// </summary>
     /// <returns>A string representation of the unique tag.</returns>
     public override string ToString() => $"{_value}_{_next}";
+
+    /// <summary>
+    /// Generates a shortened hash representation of the Tag preserving uniqueness and distribution characteristics.
+    /// </summary>
+    /// <param name="length">The desired length of the shortened hash. Minimum 5</param>
+    /// <returns>A hexadecimal string representation of the tag, optimized to minimize collisions within the specified length.</returns>
+    public string AsString(int length)
+    {
+        if (length < 5)
+        {
+            throw new ArgumentOutOfRangeException(nameof(length), "Length must be greater than 5.");
+        }
+        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(ToString()));
+
+        Span<char> charBuffer = stackalloc char[length * 2];
+        var charIndex = 0;
+
+        for (var i = 0; i < hashBytes.Length && charIndex < charBuffer.Length; i++)
+        {
+            hashBytes[i].TryFormat(charBuffer.Slice(charIndex, 2), out _, "x2", CultureInfo.InvariantCulture);
+            charIndex += 2;
+        }
+
+        return new string(charBuffer[..Math.Min(length, charIndex)]);
+    }
 
     /// <summary>
     /// Derives the next unique value based on the current unique tag.

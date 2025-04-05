@@ -23,7 +23,7 @@ internal class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
         IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions)
     {
-        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
+        ParallelSettings.Instance.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
         
         if (!testMethod.ShouldUseClassRetry(out var retryCount))
             return base.FindTestsForMethod(testMethod, includeSourceInformation, messageBus, discoveryOptions);
@@ -90,7 +90,7 @@ internal class ParallelTestFrameworkDiscoverer: XunitTestFrameworkDiscoverer
     protected override bool FindTestsForType(ITestClass testClass, bool includeSourceInformation, IMessageBus messageBus,
         ITestFrameworkDiscoveryOptions discoveryOptions)
     {
-        ParallelSettings.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
+        ParallelSettings.Instance.RefineParallelSetting(_assemblyInfo.Name, discoveryOptions);
         return base.FindTestsForType(testClass, includeSourceInformation, messageBus, discoveryOptions);
     }
 }
