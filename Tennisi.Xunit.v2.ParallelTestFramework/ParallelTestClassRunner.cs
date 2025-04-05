@@ -23,7 +23,7 @@ internal class ParallelTestClassRunner : XunitTestClassRunner
         : base(testClass, @class, testCases, diagnosticMessageSink, messageBus, testCaseOrderer, aggregator, cancellationTokenSource, collectionFixtureMappings)
     {
         _disableTestParallelizationOnAssembly = 
-            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
+            ParallelSettings.Instance.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
     }
 
     /// <summary>

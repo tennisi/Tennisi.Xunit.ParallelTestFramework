@@ -14,7 +14,7 @@ namespace Tennisi.Xunit;
 /// Provides a task scheduler that ensures a maximum concurrency level while
 /// running on top of the ThreadPool.
 /// </summary>
-public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
+internal class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
 {
     /// <summary>Whether the current thread is processing work items.</summary>
     [ThreadStatic]
@@ -25,7 +25,8 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     private readonly int _maxDegreeOfParallelism;
     /// <summary>Whether the scheduler is currently processing work items.</summary>
     private int _delegatesQueuedOrRunning; // protected by lock(_tasks)
-
+    internal int DelegatesQueuedOrRunning => _delegatesQueuedOrRunning;
+    internal LinkedList<Task> Tasks => _tasks; 
     /// <summary>
     /// Initializes an instance of the LimitedConcurrencyLevelTaskScheduler class with the
     /// specified degree of parallelism.
