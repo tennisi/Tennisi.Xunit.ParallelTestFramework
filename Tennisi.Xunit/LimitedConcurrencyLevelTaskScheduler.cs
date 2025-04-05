@@ -25,15 +25,13 @@ internal class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     private readonly int _maxDegreeOfParallelism;
     /// <summary>Whether the scheduler is currently processing work items.</summary>
     private int _delegatesQueuedOrRunning; // protected by lock(_tasks)
-    internal int DelegatesQueuedOrRunning => _delegatesQueuedOrRunning;
-    internal LinkedList<Task> Tasks => _tasks; 
+
     /// <summary>
     /// Initializes an instance of the LimitedConcurrencyLevelTaskScheduler class with the
     /// specified degree of parallelism.
     /// </summary>
     /// <param name="maxDegreeOfParallelism">The maximum degree of parallelism provided by this scheduler.</param>
-    [SuppressMessage("Design",
-        "CA1512:Use 'ArgumentOutOfRangeException.ThrowIfLessThan' instead of explicitly throwing a new exception instance")]
+    [SuppressMessage("Maintainability", "CA1512:Использовать вспомогательное приложение по вызову ArgumentOutOfRangeException")]
     public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
     {
         if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));

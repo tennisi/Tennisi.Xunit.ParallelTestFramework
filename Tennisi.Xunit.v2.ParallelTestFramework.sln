@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocGen", "DocGen\DocGen.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit", "Tennisi.Xunit\Tennisi.Xunit.csproj", "{00714292-ECFF-4790-A889-8E838E5D1445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v2.ParallelTestFramework.StandAloneTests", "Tennisi.Xunit.v2.ParallelTestFramework.StandAloneTests\Tennisi.Xunit.v2.ParallelTestFramework.StandAloneTests.csproj", "{3375000E-C61B-405B-9D4D-DAEF01C4BB67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tennisi.Xunit.v2.ParallelTestFramework.Unit.Tests", "Tennisi.Xunit.v2.ParallelTestFramework.Unit.Tests\Tennisi.Xunit.v2.ParallelTestFramework.Unit.Tests.csproj", "{3375000E-C61B-405B-9D4D-DAEF01C4BB67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

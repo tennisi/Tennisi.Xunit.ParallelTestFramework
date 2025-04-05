@@ -49,7 +49,7 @@ internal class ParallelSettings
         }
     }
 
-    public bool GetSetting(string assemblyName, string setting)
+    internal virtual bool GetSetting(string assemblyName, string setting)
     {
         assemblyName = AssemblyInfoExtractor.ExtractNameAndVersion(assemblyName);
         var res = TestCollectionsCache.TryGetValue(assemblyName, out var asm);

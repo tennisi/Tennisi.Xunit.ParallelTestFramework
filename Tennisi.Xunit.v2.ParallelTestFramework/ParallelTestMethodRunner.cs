@@ -63,9 +63,9 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
             if (limiter != null)
             {
                 var tasks = TestCases.Select(testCase =>
-                    limiter.TaskFactory.StartNew(() => RunTestCaseAsync2(testCase, disableParallelization), CancellationTokenSource.Token, TaskCreationOptions.DenyChildAttach, scheduler: limiter.TaskScheduler).Unwrap());
+                    limiter.TaskFactory.StartNew(() => RunDiagnosticTestCaseAsync(testCase), CancellationTokenSource.Token, TaskCreationOptions.DenyChildAttach, scheduler: limiter.TaskScheduler).Unwrap());
 
-                caseSummaries = await Task.WhenAll(tasks);
+                caseSummaries = await Task.WhenAll(tasks).ConfigureAwait(false);
             }
             else
             {

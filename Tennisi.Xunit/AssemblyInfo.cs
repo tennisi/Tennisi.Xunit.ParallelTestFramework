@@ -5,4 +5,4 @@
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.VisualStudio.TestPlatform.UnitTestFramework")]
 
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tennisi.Xunit.v2.ParallelTestFramework.StandAloneTests")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Tennisi.Xunit.v2.ParallelTestFramework.Unit.Tests")]
