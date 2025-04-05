@@ -6,6 +6,11 @@ namespace Tennisi.Xunit;
 
 internal static class ParallelSettings
 {
+    internal class Limiter
+    {
+        public required TaskScheduler TaskScheduler { get; init; }
+        public required TaskFactory TaskFactory{ get; init; }
+    }
     private sealed class TestAsm
     {
         public TestAsm(bool? disable, bool? full, int? degree, ITestFrameworkOptions opts)
@@ -18,7 +23,7 @@ internal static class ParallelSettings
         internal int? DegreeOfParallelism { get; set; }
         internal bool? Disable {get; set;}
         internal bool? Full {get; set;}
-        internal readonly ConcurrentDictionary<string, SemaphoreSlim> LimiterCache = new();
+        internal readonly ConcurrentDictionary<string, Limiter?> LimiterCache = new();
         internal ITestFrameworkOptions Opts { get; set; }
     }
     private static readonly ConcurrentDictionary<string, TestAsm> TestCollectionsCache = new();
@@ -57,7 +62,7 @@ internal static class ParallelSettings
         return val;
     }
     
-    internal static SemaphoreSlim? GetLimiter(string assemblyName, ITestClass testClass)
+    internal static Limiter? GetLimiter(string assemblyName, ITestClass testClass)
     {
         assemblyName = AssemblyInfoExtractor.ExtractNameAndVersion(assemblyName);
         
@@ -68,7 +73,7 @@ internal static class ParallelSettings
         var key = assemblyName;
         if (testClass.Class.IsDegreeOfParallelism())
         {
-            degreeOfParallelism = testClass.Class.DegreeOfParallelism();;
+            degreeOfParallelism = testClass.Class.DegreeOfParallelism();
             key = testClass.Class.Name;
         }
         degreeOfParallelism ??= Environment.ProcessorCount ;
@@ -77,8 +82,13 @@ internal static class ParallelSettings
         
         var result = asm!.LimiterCache.GetOrAdd(key! , _ =>
         {
-            var limiter = new SemaphoreSlim(degreeOfParallelism.Value);
-            return limiter;
+            var scheduler = new LimitedConcurrencyLevelTaskScheduler((int)degreeOfParallelism);
+            var factory =    new TaskFactory(
+                CancellationToken.None,
+                TaskCreationOptions.DenyChildAttach,
+                TaskContinuationOptions.None,scheduler
+            );
+            return new Limiter(){TaskScheduler = scheduler, TaskFactory =  factory};
         });
         return result;
     }
