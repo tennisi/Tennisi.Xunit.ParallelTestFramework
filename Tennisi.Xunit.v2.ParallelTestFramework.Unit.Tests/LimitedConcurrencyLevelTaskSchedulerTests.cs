@@ -19,7 +19,7 @@ public class LimitedConcurrencyLevelTaskSchedulerTests
     }
 
     [TestMethod]
-    public async Task ShouldSyncQueueTasksAndLimitConcurrency()
+    public async Task ShouldQueueSyncMethodsAndLimitConcurrency()
     {
         using var cts = new CancellationTokenSource();
         var observer = new Observer();
@@ -58,6 +58,6 @@ public class LimitedConcurrencyLevelTaskSchedulerTests
 #endif
         Assert.AreEqual(taskCount, completedTasks);
         Assert.IsTrue(peakConcurrency <= maxConcurrency, $"Peak concurrency {peakConcurrency} exceeded max {maxConcurrency}");
-        Assert.IsTrue(observer.MaxObservedThreadCount <= maxConcurrency, $"Peak Independent concurrency {observer.MaxObservedThreadCount} exceeded max {maxConcurrency}");
+        Assert.IsTrue(observer.IndependentMaxObservedThreadCount <= maxConcurrency, $"Peak Independent concurrency {observer.IndependentMaxObservedThreadCount} exceeded max {maxConcurrency}");
     }
 }

@@ -92,7 +92,8 @@ internal class ParallelSettings
             TaskCreationOptions.DenyChildAttach,
             TaskContinuationOptions.None,scheduler
         );
-        return new Limiter(){TaskScheduler = scheduler, TaskFactory =  factory};
+        var semaphoreSlim = new SemaphoreSlim(degreeOfParallelism);
+        return new Limiter(){TaskScheduler = scheduler, TaskFactory =  factory, SemaphoreSlim = semaphoreSlim};
     }
     
     private TestAsm DetectParallelBehaviour(string assemblyName, ITestFrameworkOptions opts)

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -62,10 +63,24 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
             IEnumerable<RunSummary> caseSummaries;
             if (limiter != null)
             {
-                var tasks = TestCases.Select(testCase =>
-                    limiter.TaskFactory.StartNew(() => RunDiagnosticTestCaseAsync(testCase), CancellationTokenSource.Token, TaskCreationOptions.DenyChildAttach, scheduler: limiter.TaskScheduler).Unwrap());
-
-                caseSummaries = await Task.WhenAll(tasks).ConfigureAwait(false);
+                var caseSummariesBag = new ConcurrentBag<RunSummary>();
+                await Parallel.ForEachAsync(
+                    TestCases,
+                    async (testCase, ct) =>
+                    {
+                        await limiter.SemaphoreSlim.WaitAsync(ct);
+                        try
+                        {
+                            var caseSummary =
+                                await limiter.TaskFactory.StartNew(() => RunDiagnosticTestCaseAsync(testCase), CancellationTokenSource.Token, TaskCreationOptions.DenyChildAttach, scheduler: limiter.TaskScheduler).Unwrap();
+                            caseSummariesBag.Add(caseSummary);
+                        }
+                        finally
+                        {
+                            limiter.SemaphoreSlim.Release();
+                        }
+                    });
+                caseSummaries = caseSummariesBag;
             }
             else
             {

@@ -13,20 +13,20 @@ internal sealed class Observer
     public int RunningThreads;
     public int MaxObservedConcurrency;
     
-    private int _maxObservedThreads;
-    private int _startObservedThreads;
-    public int MaxObservedThreadCount => - _startObservedThreads + _maxObservedThreads;
+    private int _independentMaxObservedThreads;
+    private int _independentStartObservedThreads;
+    public int IndependentMaxObservedThreadCount => - _independentStartObservedThreads + _independentMaxObservedThreads;
 
     private void TrackThreadUsage()
     {
         var currentThreads = Process.GetCurrentProcess().Threads.Count;
-        _maxObservedThreads = Math.Max(_maxObservedThreads, currentThreads);
+        _independentMaxObservedThreads = Math.Max(_independentMaxObservedThreads, currentThreads);
     }
 
     public void StartMonitoring(int delayMilliseconds, CancellationToken cancellationToken)
     {
         TrackThreadUsage();
-        _startObservedThreads = _maxObservedThreads;
+        _independentStartObservedThreads = _independentMaxObservedThreads;
         Task.Run(() => MonitorThreadsForDuration(delayMilliseconds, cancellationToken), cancellationToken);
     }
 

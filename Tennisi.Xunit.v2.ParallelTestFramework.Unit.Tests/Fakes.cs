@@ -73,11 +73,11 @@ internal sealed class FakeDiagnosticMessageSink : IMessageSink
     }
 }
 
-internal sealed class FakeTestCase : XunitTestCase
+internal sealed class FakeTestCaseSync : XunitTestCase
 {
     private Observer Observer { get; }
     private int Index { get; }
-    public FakeTestCase(int index, Observer observer)
+    public FakeTestCaseSync(int index, Observer observer)
         : base(new FakeDiagnosticMessageSink(), TestMethodDisplay.Method, TestMethodDisplayOptions.None, CreateFakeTestMethod(), Array.Empty<object>())
     {
         Index = index;
@@ -90,18 +90,18 @@ internal sealed class FakeTestCase : XunitTestCase
         ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
-        FakeCaseAction();
+        FakeCaseActionSync();
         return Task.FromResult(new RunSummary { Total = 1, Failed = 0 });
     }
 
     private static TestMethod CreateFakeTestMethod()
     {
-        var methodInfo = typeof(FakeTestCase).GetMethod(nameof(FakeCaseAction))!;
-        var typeInfo = new ReflectionTypeInfo(typeof(FakeTestCase));
+        var methodInfo = typeof(FakeTestCaseSync).GetMethod(nameof(FakeCaseActionSync))!;
+        var typeInfo = new ReflectionTypeInfo(typeof(FakeTestCaseSync));
         var method = new ReflectionMethodInfo(methodInfo);
         var testClass = new TestClass(
             new TestCollection(
-                new TestAssembly(new ReflectionAssemblyInfo(typeof(FakeTestCase).Assembly)),
+                new TestAssembly(new ReflectionAssemblyInfo(typeof(FakeTestCaseSync).Assembly)),
                 collectionDefinition: null,
                 displayName: "Fake Collection"),
             typeInfo);
@@ -109,12 +109,61 @@ internal sealed class FakeTestCase : XunitTestCase
         return new TestMethod(testClass, method);
     }
     
-    public void FakeCaseAction()
+    public void FakeCaseActionSync()
     {
         var concurrent = Interlocked.Increment(ref Observer.RunningThreads);
         Observer.Max(ref Observer.MaxObservedConcurrency, concurrent);
 
         Thread.Sleep(100);
+        
+        Interlocked.Decrement(ref Observer.RunningThreads);
+        Observer.TestCases.Add(Index);
+    }
+}
+
+
+internal sealed class FakeTestCaseAsync : XunitTestCase
+{
+    private Observer Observer { get; }
+    private int Index { get; }
+    public FakeTestCaseAsync(int index, Observer observer)
+        : base(new FakeDiagnosticMessageSink(), TestMethodDisplay.Method, TestMethodDisplayOptions.None, CreateFakeTestMethod(), Array.Empty<object>())
+    {
+        Index = index;
+        Observer = observer;
+    }
+
+    public override async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink,
+        IMessageBus messageBus,
+        object[] constructorArguments,
+        ExceptionAggregator aggregator,
+        CancellationTokenSource cancellationTokenSource)
+    {
+        await FakeCaseActionAsync();
+        return new RunSummary { Total = 1, Failed = 0 };
+    }
+
+    private static TestMethod CreateFakeTestMethod()
+    {
+        var methodInfo = typeof(FakeTestCaseAsync).GetMethod(nameof(FakeCaseActionAsync))!;
+        var typeInfo = new ReflectionTypeInfo(typeof(FakeTestCaseAsync));
+        var method = new ReflectionMethodInfo(methodInfo);
+        var testClass = new TestClass(
+            new TestCollection(
+                new TestAssembly(new ReflectionAssemblyInfo(typeof(FakeTestCaseAsync).Assembly)),
+                collectionDefinition: null,
+                displayName: "Fake Collection"),
+            typeInfo);
+
+        return new TestMethod(testClass, method);
+    }
+    
+    public async Task FakeCaseActionAsync()
+    {
+        var concurrent = Interlocked.Increment(ref Observer.RunningThreads);
+        Observer.Max(ref Observer.MaxObservedConcurrency, concurrent);
+
+        await Task.Delay(100);
         
         Interlocked.Decrement(ref Observer.RunningThreads);
         Observer.TestCases.Add(Index);

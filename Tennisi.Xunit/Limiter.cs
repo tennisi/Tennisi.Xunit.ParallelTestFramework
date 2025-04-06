@@ -4,4 +4,5 @@ internal class Limiter
 {
     public required TaskScheduler TaskScheduler { get; init; }
     public required TaskFactory TaskFactory{ get; init; }
+    public required SemaphoreSlim SemaphoreSlim { get; init; }
 }
