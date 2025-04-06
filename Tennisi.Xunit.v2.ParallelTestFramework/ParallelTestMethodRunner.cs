@@ -31,14 +31,14 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
         _diagnosticMessageSink = diagnosticMessageSink;
         _constructorArguments = constructorArguments;
         _disableTestParallelizationOnAssembly = 
-            ParallelSettings.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
+            ParallelSettings.Instance.GetSetting(@Class.Assembly.Name, "xunit.execution.DisableParallelization");
     }
 
     /// <inheritdoc />
     protected override async Task<RunSummary?> RunTestCasesAsync()
     {
         bool disableParallelization;
-        SemaphoreSlim? limiter = null;
+        Limiter? limiter = null;
         if (_disableTestParallelizationOnAssembly)
         {
             disableParallelization = true;
@@ -54,33 +54,31 @@ internal class ParallelTestMethodRunner : XunitTestMethodRunner
                 || TestMethod.Method.GetCustomAttributes(typeof(MemberDataAttribute)).Any(a =>
                     a.GetNamedArgument<bool>(nameof(MemberDataAttribute.DisableDiscoveryEnumeration))
                 );
-            limiter = ParallelSettings.GetLimiter(Class.Assembly.Name, TestMethod.TestClass);
+            limiter = ParallelSettings.Instance.GetLimiter(Class.Assembly.Name, TestMethod.TestClass);
         }
         
         var summary = new RunSummary();
-        if (!disableParallelization && ParallelSettings.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))
+        if (!disableParallelization && ParallelSettings.Instance.GetSetting(TestMethod.TestClass.Class.Assembly.Name, "xunit.discovery.PreEnumerateTheories"))
         {
             IEnumerable<RunSummary> caseSummaries;
             if (limiter != null)
             {
                 var caseSummariesBag = new ConcurrentBag<RunSummary>();
-
                 await Parallel.ForEachAsync(
                     TestCases,
                     async (testCase, ct) =>
                     {
-                        await limiter.WaitAsync(ct);
+                        await limiter.SemaphoreSlim.WaitAsync(ct);
                         try
                         {
                             var caseSummary =
-                                await RunTestCaseAsync2(testCase, disableParallelization).ConfigureAwait(false);
+                                await limiter.TaskFactory.StartNew(() => RunDiagnosticTestCaseAsync(testCase), CancellationTokenSource.Token, TaskCreationOptions.DenyChildAttach, scheduler: limiter.TaskScheduler).Unwrap();
                             caseSummariesBag.Add(caseSummary);
                         }
                         finally
                         {
-                            limiter.Release();
+                            limiter.SemaphoreSlim.Release();
                         }
-                        
                     });
                 caseSummaries = caseSummariesBag;
             }

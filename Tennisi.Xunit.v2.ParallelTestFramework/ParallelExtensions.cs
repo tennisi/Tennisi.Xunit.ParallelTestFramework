@@ -29,11 +29,11 @@ internal static class ParallelExtensions
     internal static bool IsEnabledParallelization(this ITypeInfo typeInfo)
         => typeInfo.GetCustomAttributes(typeof(TestParallelizationAttribute)).IsEnabledParallelization();
 
-    internal static bool IsDisabledParallelization(this IMethodInfo typeInfo)
-        => typeInfo.GetCustomAttributes(typeof(TestParallelizationAttribute)).IsDisabledParallelization();
+    internal static bool IsDisabledParallelization(this IMethodInfo methodInfo)
+        => methodInfo.GetCustomAttributes(typeof(TestParallelizationAttribute)).IsDisabledParallelization();
 
-    internal static bool IsEnabledParallelization(this IMethodInfo typeInfo)
-        => typeInfo.GetCustomAttributes(typeof(TestParallelizationAttribute)).IsEnabledParallelization();
+    internal static bool IsEnabledParallelization(this IMethodInfo methodInfo)
+        => methodInfo.GetCustomAttributes(typeof(TestParallelizationAttribute)).IsEnabledParallelization();
     
     
     private static int? DegreeOfParallelism(this Attribute attribute)

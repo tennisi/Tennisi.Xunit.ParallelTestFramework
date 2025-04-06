@@ -20,7 +20,7 @@ internal class ParallelTestTestCollectionRunner : XunitTestCollectionRunner
             cancellationTokenSource)
     {
         _disableTestParallelizationOnAssembly = 
-            ParallelSettings.GetSetting(testCollection.TestAssembly.Assembly.Name, "xunit.execution.DisableParallelization");
+            ParallelSettings.Instance.GetSetting(testCollection.TestAssembly.Assembly.Name, "xunit.execution.DisableParallelization");
     }
     
     /// <summary>

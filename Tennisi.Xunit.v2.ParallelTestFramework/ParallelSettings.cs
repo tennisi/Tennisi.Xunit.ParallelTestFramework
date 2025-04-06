@@ -4,8 +4,9 @@ using Xunit.Abstractions;
 
 namespace Tennisi.Xunit;
 
-internal static class ParallelSettings
+internal class ParallelSettings
 {
+    internal static ParallelSettings Instance { get; set; } = new ParallelSettings(); 
     private sealed class TestAsm
     {
         public TestAsm(bool? disable, bool? full, int? degree, ITestFrameworkOptions opts)
@@ -18,17 +19,17 @@ internal static class ParallelSettings
         internal int? DegreeOfParallelism { get; set; }
         internal bool? Disable {get; set;}
         internal bool? Full {get; set;}
-        internal readonly ConcurrentDictionary<string, SemaphoreSlim> LimiterCache = new();
+        internal readonly ConcurrentDictionary<string, Limiter?> LimiterCache = new();
         internal ITestFrameworkOptions Opts { get; set; }
     }
-    private static readonly ConcurrentDictionary<string, TestAsm> TestCollectionsCache = new();
+    private readonly ConcurrentDictionary<string, TestAsm> TestCollectionsCache = new();
 
-    internal static void RefineParallelSetting(AssemblyName assemblyName, ITestFrameworkOptions opts)
+    internal void RefineParallelSetting(AssemblyName assemblyName, ITestFrameworkOptions opts)
     {
         RefineParallelSetting(assemblyName.FullName, opts);
     }
     
-    internal static void RefineParallelSetting(string assemblyName, ITestFrameworkOptions opts)
+    internal void RefineParallelSetting(string assemblyName, ITestFrameworkOptions opts)
     {
         var behaviour = DetectParallelBehaviour(assemblyName, opts);
         
@@ -48,7 +49,7 @@ internal static class ParallelSettings
         }
     }
 
-    public static bool GetSetting(string assemblyName, string setting)
+    internal virtual bool GetSetting(string assemblyName, string setting)
     {
         assemblyName = AssemblyInfoExtractor.ExtractNameAndVersion(assemblyName);
         var res = TestCollectionsCache.TryGetValue(assemblyName, out var asm);
@@ -57,18 +58,18 @@ internal static class ParallelSettings
         return val;
     }
     
-    internal static SemaphoreSlim? GetLimiter(string assemblyName, ITestClass testClass)
+    internal virtual Limiter? GetLimiter(string assemblyName, ITestClass testClass)
     {
         assemblyName = AssemblyInfoExtractor.ExtractNameAndVersion(assemblyName);
         
         var res = TestCollectionsCache.TryGetValue(assemblyName, out var asm);
         if (!res) throw new InvalidOperationException();
-        int? degreeOfParallelism =  asm?.DegreeOfParallelism;
+        var degreeOfParallelism =  asm?.DegreeOfParallelism;
 
         var key = assemblyName;
         if (testClass.Class.IsDegreeOfParallelism())
         {
-            degreeOfParallelism = testClass.Class.DegreeOfParallelism();;
+            degreeOfParallelism = testClass.Class.DegreeOfParallelism();
             key = testClass.Class.Name;
         }
         degreeOfParallelism ??= Environment.ProcessorCount ;
@@ -77,13 +78,25 @@ internal static class ParallelSettings
         
         var result = asm!.LimiterCache.GetOrAdd(key! , _ =>
         {
-            var limiter = new SemaphoreSlim(degreeOfParallelism.Value);
+            var limiter = ConstructLimiter((int)degreeOfParallelism);
             return limiter;
         });
         return result;
     }
+
+    internal virtual Limiter? ConstructLimiter(int degreeOfParallelism)
+    {
+        var scheduler = new LimitedConcurrencyLevelTaskScheduler(degreeOfParallelism);
+        var factory =    new TaskFactory(
+            CancellationToken.None,
+            TaskCreationOptions.DenyChildAttach,
+            TaskContinuationOptions.None,scheduler
+        );
+        var semaphoreSlim = new SemaphoreSlim(degreeOfParallelism);
+        return new Limiter(){TaskScheduler = scheduler, TaskFactory =  factory, SemaphoreSlim = semaphoreSlim};
+    }
     
-    private static TestAsm DetectParallelBehaviour(string assemblyName, ITestFrameworkOptions opts)
+    private TestAsm DetectParallelBehaviour(string assemblyName, ITestFrameworkOptions opts)
     {
         assemblyName = AssemblyInfoExtractor.ExtractNameAndVersion(assemblyName);
         return TestCollectionsCache.GetOrAdd(assemblyName , name =>
